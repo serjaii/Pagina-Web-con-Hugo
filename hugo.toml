@@ -2,3 +2,5 @@ baseURL = 'https://example.org/'
 languageCode = 'es-es'
 title = 'Blog Personal Sergio Jiménez'
 theme = 'xterm'
+[params]
+  showMenuItems = true
