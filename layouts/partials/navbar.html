@@ -1,0 +1,45 @@
+{{- $logoText := site.Params.Logo.logoText | default "Home" -}}
+{{- $logoLink := site.Params.Logo.logoHomeLink | default "" -}}
+
+<nav class="navbar">
+  <div class="navbar__first">
+    <ul class="navbar__list borders">
+      <li><a href="{{ absURL $logoLink }}">{{ $logoText }}</a></li>
+      <li>
+        <button class="theme-toggle transparent">
+          {{- partial "theme-icon.html" . -}}
+        </button>
+      </li>
+    </ul>
+  </div>
+
+  <div class="navbar__separator"></div>
+
+  {{- if site.Params.showMenuItems }}
+    <div class="navbar__last">
+      <ul class="navbar__list borders menu--desktop">
+        {{- range site.Menus.main -}}
+          {{- if not .HasChildren }}
+            <li><a href="{{ .URL }}">{{ .Name }}</a></li>
+          {{- end }}
+        {{- end -}}
+        <!-- Enlace a GitHub -->
+        <li><a href="https://github.com/serjaii" target="_blank">GitHub</a></li>
+      </ul>
+      <ul class="menu menu--mobile">
+        <li class="menu-trigger">===</li>
+        <li>
+          <ul class="menu-dropdown">
+            {{- range site.Menus.main -}}
+              {{- if not .HasChildren }}
+                <li><a href="{{ .URL }}">{{ .Name }}</a></li>
+              {{- end }}
+            {{- end -}}
+            <!-- Enlace a GitHub en móvil -->
+            <li><a href="https://github.com/serjaii" target="_blank">GitHub</a></li>
+          </ul>
+        </li>
+      </ul>
+    </div>
+  {{- end }}
+</nav>
