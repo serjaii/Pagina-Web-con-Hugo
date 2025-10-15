@@ -1,4 +1,24 @@
 baseURL = 'https://example.org/'
-languageCode = 'en-us'
-title = 'My New Hugo Site'
+languageCode = 'es-es'
+title = 'Serj AI'
 theme = 'stack'
+[menu]
+  [[menu.main]]
+    identifier = "about"
+    name = "Sobre Mi"
+    url = "/about/"
+    weight = 1
+
+  [[menu.main]]
+    identifier = "projectos"
+    name = "Projectos"
+    url = "/projectos/"
+    weight = 2
+
+  [[menu.main]]
+    identifier = "github"
+    name = "GitHub"
+    url = "https://github.com/serjaii"
+    weight = 3
+    params.icon = "brand-github"
+    params.newTab = true
