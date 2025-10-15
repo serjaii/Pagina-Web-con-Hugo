@@ -1,4 +1,4 @@
-baseURL = 'https://example.org/'
+baseURL = 'https://github.com/serjaii/Codigo-html-de-mi-pagina'
 languageCode = 'es-es'
 title = 'Serj AI'
 theme = 'stack'
