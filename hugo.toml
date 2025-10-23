@@ -73,15 +73,14 @@ default = "auto"
     weight = 5
     params.icon = "search"
 
-[menu.social]
-  [[menu.social]]
-    identifier = "github"
-    name = "GitHub"
-    url = "https://github.com/serjaii"
-    params.icon = "brand-github"
+[[menu.social]]
+  identifier = "github"
+  name = "GitHub"
+  url = "https://github.com/serjaii"
+  params.icon = "brand-github"
     
-  [[menu.social]]
-    identifier = "linkedin"
-    name = "LinkedIn"
-    url = "#"  # Actualiza con tu URL de LinkedIn
-    params.icon = "brand-linkedin"
+[[menu.social]]
+  identifier = "linkedin"
+  name = "LinkedIn"
+  url = "#"  # Actualiza con tu URL de LinkedIn
+  params.icon = "brand-linkedin"
