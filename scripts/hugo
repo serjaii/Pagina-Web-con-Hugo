@@ -1,35 +1,52 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-# Wrapper para construir el sitio con Hugo y publicar la carpeta public
-# Asume que el repo en public/ ya está configurado y tiene remote origin
+# Wrapper para construir el sitio con Hugo y publicar cambios
+# Hace commit y push en ambos repos: SerjAI/ y public/
 
+TIMESTAMP=$(date -u +'%Y-%m-%dT%H:%M:%SZ')
+COMMIT_MSG="Actualizar sitio: $TIMESTAMP"
+
+# 1. Commit y push en el repo principal (SerjAI)
+echo "Commit en repo principal..."
+git add --all
+if ! git diff --staged --quiet || ! git diff --quiet; then
+    git commit -m "$COMMIT_MSG"
+    git push origin main
+    echo "✓ Cambios subidos a repo principal"
+else
+    echo "× No hay cambios en repo principal"
+fi
+
+# 2. Build con hugo
 echo "Building site with hugo..."
 hugo "$@"
 
 if [ ! -d public ]; then
-  echo "Error: la carpeta public/ no existe después de la build" >&2
-  exit 1
+    echo "Error: la carpeta public/ no existe después de la build" >&2
+    exit 1
 fi
 
+# 3. Commit y push en public/
+echo "Commit en public/..."
 pushd public > /dev/null
 
-  # Agregar y commitear cambios
-  git add --all
+# Agregar y commitear cambios
+git add --all
 
-  COMMIT_MSG="Actualizar sitio: $(date -u +'%Y-%m-%dT%H:%M:%SZ')"
-
-  # Commit si hay cambios
-  if git diff --staged --quiet && git diff --quiet; then
-    echo "No hay cambios en public/ — nada que publicar"
-  else
-    git commit -m "$COMMIT_MSG" || true
-    
-    # Push al repositorio remoto (asume que origin ya está configurado)
+if git diff --staged --quiet && git diff --quiet; then
+    echo "× No hay cambios en public/"
+else
+    git commit -m "$COMMIT_MSG"
     git push origin main
-    echo "Publicado public/ -> origin/main"
-  fi
+    echo "✓ Cambios subidos a public/"
+fi
 
 popd > /dev/null
 
-echo "Done."
+echo "
+Resumen:
+--------
+Timestamp: $TIMESTAMP
+Build: ✓ Completada
+"
