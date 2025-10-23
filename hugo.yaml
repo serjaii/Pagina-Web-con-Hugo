@@ -1,0 +1,73 @@
+baseURL: "https://serjaii.github.io/Codigo-html-de-mi-pagina"
+languageCode: es-es
+theme: stack
+title: Serj AI
+
+params:
+  mainSections:
+    - post
+  featuredImageField: image
+  rssFullContent: true
+
+  footer:
+    since: 2023
+
+  dateFormat:
+    published: "02 Jan 2006"
+    lastUpdated: "02 Jan 2006 15:04 MST"
+
+  sidebar:
+    emoji: 🤖
+    subtitle: "Desarrollador y entusiasta de la IA"
+    avatar:
+      enabled: true
+      local: true
+      src: img/mi-logo.jpg
+
+  article:
+    math: true
+    toc: true
+    readingTime: true
+
+  widgets:
+    homepage:
+      - type: search
+      - type: archives
+      - type: categories
+      - type: tag-cloud
+    page:
+      - type: toc
+
+  colorScheme:
+    toggle: true
+    default: auto
+
+menu:
+  main:
+    - identifier: home
+      name: Inicio
+      url: /
+      weight: 1
+    - identifier: about
+      name: Sobre Mi
+      url: /about/
+      weight: 2
+    - identifier: projectos
+      name: Proyectos
+      url: /projectos/
+      weight: 3
+    - identifier: archives
+      name: Archivo
+      url: /archives/
+      weight: 4
+    - identifier: search
+      name: Buscar
+      url: /search/
+      weight: 5
+
+  social:
+    - identifier: github
+      name: GitHub
+      url: https://github.com/serjaii
+      params:
+        icon: brand-github
