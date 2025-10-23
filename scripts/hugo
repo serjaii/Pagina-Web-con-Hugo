@@ -2,12 +2,12 @@
 set -euo pipefail
 
 # Wrapper para construir el sitio con Hugo y publicar cambios
-# Hace commit y push en ambos repos: SerjAI/ y public/
+# Hace commit y push en ambos repos: SerjAi/ y public/
 
 TIMESTAMP=$(date -u +'%Y-%m-%dT%H:%M:%SZ')
 COMMIT_MSG="Actualizar sitio: $TIMESTAMP"
 
-# 1. Commit y push en el repo principal (SerjAI)
+# 1. Commit y push en el repo principal (SerjAi)
 echo "Commit en repo principal..."
 git add --all
 if ! git diff --staged --quiet || ! git diff --quiet; then

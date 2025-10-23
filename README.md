@@ -1,4 +1,4 @@
-# Sitio Hugo — Serj AI
+# Sitio Hugo — SerjAi
 
 Pequeñas instrucciones para construir y desplegar el sitio Hugo.
 
@@ -11,7 +11,7 @@ Build local
 hugo # genera el sitio en ./public
 hugo server -D # servidor local con live-reload, incluye drafts
 ````markdown
-# Sitio Hugo — Serj AI
+# Sitio Hugo — SerjAi
 
 Pequeñas instrucciones para construir y desplegar el sitio Hugo.
 
