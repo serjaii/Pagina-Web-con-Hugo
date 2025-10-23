@@ -9,8 +9,9 @@ COMMIT_MSG="Actualizar sitio: $TIMESTAMP"
 
 # 1. Commit y push en el repo principal (SerjAi)
 echo "Commit en repo principal..."
-git add --all
-if ! git diff --staged --quiet || ! git diff --quiet; then
+# Use git add :/ to exclude submodules from staging
+git add --all :/
+if ! git diff --staged --quiet || ! git diff --quiet :/; then
     git commit -m "$COMMIT_MSG"
     git push origin main
     echo "✓ Cambios subidos a repo principal"
