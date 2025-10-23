@@ -48,10 +48,6 @@ menu:
       name: Inicio
       url: /
       weight: 1
-    - identifier: about
-      name: Sobre Mi
-      url: /about/
-      weight: 2
     - identifier: projectos
       name: Proyectos
       url: /projectos/
