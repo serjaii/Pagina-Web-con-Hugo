@@ -22,4 +22,4 @@ menu:
 
 ¿Tienes alguna pregunta o propuesta? No dudes en contactarme a través de:
 - GitHub: [@serjaii](https://github.com/serjaii)
-- LinkedIn: [Tu perfil]() <!-- Añade tu URL de LinkedIn -->
+- LinkedIn: [Sergio Jiménez](www.linkedin.com/in/serjaii)
