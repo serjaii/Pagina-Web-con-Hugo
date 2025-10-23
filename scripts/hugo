@@ -1,0 +1,64 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+# Wrapper para construir el sitio con Hugo y publicar la carpeta public
+# en el repo remoto que sirve los archivos estáticos (gh-pages style).
+# Configurable via variables de entorno:
+#  - PUBLIC_REPO (por defecto https://github.com/serjaii/Codigo-html-de-mi-pagina)
+#  - PUBLIC_BRANCH (por defecto main)
+#  - GIT_AUTHOR_NAME, GIT_AUTHOR_EMAIL (opcional)
+
+PUBLIC_REPO="${PUBLIC_REPO:-https://github.com/serjaii/Codigo-html-de-mi-pagina}"
+PUBLIC_BRANCH="${PUBLIC_BRANCH:-main}"
+
+echo "Building site with hugo..."
+hugo "$@"
+
+if [ ! -d public ]; then
+  echo "Error: la carpeta public/ no existe después de la build" >&2
+  exit 1
+fi
+
+pushd public > /dev/null
+
+  # Inicializar repo si es necesario
+  if [ ! -d .git ]; then
+    git init
+    git checkout -b "$PUBLIC_BRANCH"
+  fi
+
+  # Agregar commit con los archivos estáticos
+  git add --all
+
+  COMMIT_MSG="Publish site: $(date -u +'%Y-%m-%dT%H:%M:%SZ')"
+  # Configurar autor si está provisto
+  if [ -n "${GIT_AUTHOR_NAME:-}" ]; then
+    git config user.name "$GIT_AUTHOR_NAME"
+  fi
+  if [ -n "${GIT_AUTHOR_EMAIL:-}" ]; then
+    git config user.email "$GIT_AUTHOR_EMAIL"
+  fi
+
+  # Commit (si hay cambios)
+  if git diff --staged --quiet && git diff --quiet; then
+    echo "No hay cambios en public/ — nada que publicar"
+  else
+    git commit -m "$COMMIT_MSG" || true
+
+    # Push forzado al repo remoto
+    # Si el repo es privado, asegúrate de exportar GITHUB_TOKEN o usar una URL con credenciales
+    REMOTE_URL="$PUBLIC_REPO"
+    if [ -n "${GITHUB_TOKEN:-}" ]; then
+      # insertar token en la URL (para GitHub)
+      REMOTE_URL="https://${GITHUB_TOKEN}@${REMOTE_URL#https://}"
+    fi
+
+    git remote remove deploy 2>/dev/null || true
+    git remote add deploy "$REMOTE_URL"
+    git push -f deploy HEAD:"$PUBLIC_BRANCH"
+    echo "Publicado public/ -> $PUBLIC_REPO#$PUBLIC_BRANCH"
+  fi
+
+popd > /dev/null
+
+echo "Done."
