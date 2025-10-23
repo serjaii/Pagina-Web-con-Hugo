@@ -8,15 +8,16 @@ menu:
             icon: user
 ---
 
-¡Hola! Soy un desarrollador apasionado por la tecnología, la inteligencia artificial y la creación de soluciones innovadoras.
+¡Hola! Me llamo Sergio Jiménez, actualmente curso 2º de ASIR en IES Gonzalo Nazareno,soy un apasionado de las redes y los sistemas.
 
 ## Mis Intereses
 
 - Desarrollo de Software
-- Inteligencia Artificial
-- Machine Learning
-- Tecnologías Web
+- Implantación de Aplicaciones Web
+- Administración de redes
+- Administración y Gestión de base de datos
 - Open Source
+- Programación
 
 ## Contacto
 
