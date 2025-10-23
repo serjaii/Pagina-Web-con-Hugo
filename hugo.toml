@@ -2,23 +2,86 @@ baseURL = 'https://serjaii.github.io/Codigo-html-de-mi-pagina'
 languageCode = 'es-es'
 title = 'Serj AI'
 theme = 'stack'
+
+# Configuración del theme Stack
+[params]
+mainSections = ['post']
+featuredImageField = 'image'
+rssFullContent = true
+
+[params.footer]
+since = 2023
+
+[params.dateFormat]
+published = "02 Jan 2006"
+lastUpdated = "02 Jan 2006 15:04 MST"
+
+[params.sidebar]
+emoji = "🤖"
+subtitle = "Desarrollador y entusiasta de la IA"
+
+[params.sidebar.avatar]
+enabled = true
+local = true
+src = "img/mi-logo.jpg"
+
+[params.article]
+math = true
+toc = true
+readingTime = true
+
+[params.widgets]
+homepage = ["search", "archives", "categories", "tags"]
+page = ["toc"]
+
+[params.colorScheme]
+toggle = true
+default = "auto"
 [menu]
+  [[menu.main]]
+    identifier = "home"
+    name = "Inicio"
+    url = "/"
+    weight = 1
+    params.icon = "home"
+
   [[menu.main]]
     identifier = "about"
     name = "Sobre Mi"
     url = "/about/"
-    weight = 1
+    weight = 2
+    params.icon = "user"
 
   [[menu.main]]
     identifier = "projectos"
-    name = "Projectos"
+    name = "Proyectos"
     url = "/projectos/"
-    weight = 2
+    weight = 3
+    params.icon = "layout-grid"
 
   [[menu.main]]
+    identifier = "archives"
+    name = "Archivo"
+    url = "/archives/"
+    weight = 4
+    params.icon = "archive"
+
+  [[menu.main]]
+    identifier = "search"
+    name = "Buscar"
+    url = "/search/"
+    weight = 5
+    params.icon = "search"
+
+[menu.social]
+  [[menu.social]]
     identifier = "github"
     name = "GitHub"
     url = "https://github.com/serjaii"
-    weight = 3
     params.icon = "brand-github"
-    params.newTab = true
+    
+  [[menu.social]]
+    identifier = "linkedin"
+    name = "LinkedIn"
+    url = "#"  # Actualiza con tu URL de LinkedIn
+    params.icon = "brand-linkedin"
