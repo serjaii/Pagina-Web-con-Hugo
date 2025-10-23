@@ -9,9 +9,10 @@ COMMIT_MSG="Actualizar sitio: $TIMESTAMP"
 
 # 1. Commit y push en el repo principal (SerjAi)
 echo "Commit en repo principal..."
-# Use git add :/ to exclude submodules from staging
-git add --all :/
-if ! git diff --staged --quiet || ! git diff --quiet :/; then
+# Ignorar cambios en submódulos
+git config status.submodulesummary 0
+git add --all ':(exclude)themes/'
+if ! git diff --staged --quiet ':(exclude)themes/' || ! git diff --quiet ':(exclude)themes/'; then
     git commit -m "$COMMIT_MSG"
     git push origin main
     echo "✓ Cambios subidos a repo principal"
