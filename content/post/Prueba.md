@@ -7,3 +7,4 @@ description: "Prueba: Introduccion a la implantacion de aplicaciones web"
 # Sergio Jimenez Suarez 30-10-2025
 
 image: "mi-logo.jpg"
+holaa
