@@ -1,4 +1,4 @@
 ---
-title: SerjAi
-description: Blog personal sobre desarrollo, IA y tecnología
+title: SerjAii
+description: Administración de sistemas informáticos en red
 ---

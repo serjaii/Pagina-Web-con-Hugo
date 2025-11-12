@@ -1,13 +1,19 @@
-baseURL: "https://serjaii.github.io/Codigo-html-de-mi-pagina"
+baseURL: "https://serjaii.github.io/Serjaii"
 languageCode: es-es
 theme: stack
-title: SerjAi
+title: SerjAii
+
+outputs:
+  home:
+    - HTML
+    - RSS
 
 params:
   mainSections:
     - post
   featuredImageField: image
   rssFullContent: true
+  favicon: img/mi-logo.jpg
 
   footer:
     since: 2023
@@ -18,7 +24,7 @@ params:
 
   sidebar:
     emoji: 🤖
-    subtitle: "Desarrollador y entusiasta de la IA"
+    subtitle: "Administración de sistemas informáticos en red"
     avatar:
       enabled: true
       local: true
@@ -48,18 +54,20 @@ menu:
       name: Inicio
       url: /
       weight: 1
-    - identifier: projectos
+      params:
+        icon: home
+    - identifier: proyectos
       name: Proyectos
-      url: /projectos/
+      url: /proyectos/
       weight: 3
-    - identifier: archives
-      name: Archivo
-      url: /archives/
-      weight: 4
+      params:
+        icon: archives
     - identifier: search
       name: Buscar
       url: /search/
-      weight: 5
+      weight: 4
+      params:
+        icon: search
 
   social:
     - identifier: github
@@ -67,3 +75,13 @@ menu:
       url: https://github.com/serjaii
       params:
         icon: brand-github
+    - identifier: linkedin
+      name: LinkedIn
+      url: https://www.linkedin.com/in/serjaii/
+      params:
+        icon: brand-linkedin
+    - identifier: gmail
+      name: Gmail
+      url: mailto:sjnezsrez@gmail.com
+      params:
+        icon: brand-google-gmail
