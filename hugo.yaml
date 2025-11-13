@@ -23,7 +23,6 @@ params:
     lastUpdated: "02 Jan 2006 15:04 MST"
 
   sidebar:
-    emoji: 🤖
     subtitle: "Administración de sistemas informáticos en red"
     avatar:
       enabled: true
