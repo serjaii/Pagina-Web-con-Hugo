@@ -37,7 +37,6 @@ En este momento solo quedan representantes de cuatro distritos.
 
 El escenario del juego incluye todos los distritos anteriores y el distrito secreto, al que al principio nadie sabe llegar.
 
-![Topología de red - Hunger Games](img-44.png)
 
 ---
 
@@ -94,44 +93,35 @@ R5 f2/0: 10.0.13.1 /24
 **R1:**  
 Si el distrito 1 quiere comunicar con el distrito 11 el tráfico irá a R2, en el resto de casos saldrá por la salida por defecto hacia R5.
 
-![Enrutamiento R1](img-40.png)
 
 **R2:**  
 Ignoramos el distrito 13, la comunicación para el distrito 1 saldrá hacia R1 y la salida por defecto será hacia R4.
 
-![Enrutamiento R2](img-06.png)
 
 **R3:**  
 Salida por defecto hacia R5, excepto mensajes para el distrito 12 que saldrán hasta R4.
 
-![Enrutamiento R3](img-38.png)
 
 **R4:**  
 Mensajes al distrito 2 viajarán a R3, el resto hasta R2.
 
-![Enrutamiento R4](img-37.png)
 
 **R5:**  
 Deberemos especificar rutas hacia cada distrito, salida por defecto hacia el distrito 13.
 
-![Enrutamiento R5](img-06.png)
 
 ### Comprobación de conectividad
 
 - Ping entre distritos:
   - Distrito 1 → Distrito 2  
 
-![Ping: Distrito 1 → Distrito 2](img-17.png)
 
   - Distrito 1 → Distrito 11  
 
-![Ping: Distrito 1 → Distrito 11](img-16.png)
 
   - Distrito 1 → Distrito 12
 
-![Ping: Distrito 1 → Distrito 12](img-15.png)
 
-![Ping: Distrito 2](img-14.png)
 
 ---
 
@@ -149,17 +139,14 @@ En el router de cada distrito bloquear tráfico destino `10.0.1.0`.
 Cortar todo el tráfico de R1 (más eficiente).  
 Se crea una **ACL estándar** en R1 que deniega todo el tráfico saliente desde la interfaz del switch.
 
-![ACL estándar en R1](img-13.png)
 
 **Resultados:**
 
 - Ping desde fuera → "administratively prohibited"
 
-![Ping desde fuera hacia Distrito 1](img-42.png)
 
 - Ping desde dentro → timeout (por denegación al retorno)
 
-![Ping desde Distrito 1 hacia fuera](img-43.png)
 
 ---
 
@@ -167,11 +154,9 @@ Se crea una **ACL estándar** en R1 que deniega todo el tráfico saliente desde 
 
 Se crea una **ACL extendida** en R4 para denegar tráfico hacia los distritos 1 y 2.
 
-![ACL extendida en R4](img-12.png)
 
 Comprobamos ping desde el distrito 12.
 
-![Comprobación de ping desde distrito 12](img-13.png)
 
 ---
 
@@ -180,9 +165,7 @@ Comprobamos ping desde el distrito 12.
 Se modifica el enrutamiento de R2 y R4 para enviar tráfico por defecto a R5.  
 No se necesita ACL nueva.
 
-![Modificación de enrutamiento R2 y R4 (1/2)](img-27.png)
 
-![Modificación de enrutamiento R2 y R4 (2/2)](img-26.png)
 
 ---
 
@@ -195,19 +178,14 @@ Las máquinas deben recibir IP automáticamente (cinco primeras del rango), rese
 
 1. Excluir la IP del router.
 
-![Excluir IPs en DHCP](img-05.png)
 
 2. Configurar parámetros del servidor DHCP.
 
-![Configuración del servidor DHCP](img-31.png)
 
 3. Comprobar asignación automática de IPs.
 
-![Comprobación DHCP (1/3)](img-11.png)
 
-![Comprobación DHCP (2/3)](img-12.png)
 
-![Comprobación DHCP (3/3)](img-13.png)
 
 ---
 
@@ -219,31 +197,23 @@ Las máquinas deben recibir IP automáticamente (cinco primeras del rango), rese
 
 Como el tráfico del distrito 12 estaba bloqueado, se reescribe la **ACL extendida**:
 
-![Reescribir ACL D12 (1/2)](img-28.png)
 
-![Reescribir ACL D12 (2/2)](img-29.png)
 
 - Katniss ↔ Peeta, Cato, Thresh  
 - Peeta ↔ Katniss, Clove, Distrito 11  
 
-![ACL Katniss (1/2)](img-34.png)
 
-![ACL Katniss (2/2)](img-35.png)
 
 **Comprobaciones:**  
 Ping en ambos sentidos, con timeout cuando está denegado.
 
-![Verificación timeout ping](img-07.png)
 
 > Cato y Thresh se pelean.
 
 Se deniega comunicación con una ACL extendida (puede estar en R2, R3 o R5).
 
-![ACL Cato-Thresh (1/3)](img-32.png)
 
-![ACL Cato-Thresh (2/3)](img-33.png)
 
-![ACL Cato-Thresh (3/3)](img-41.png)
 
 ---
 
@@ -255,17 +225,13 @@ Se monta un **servidor Apache** accesible solo desde los distritos 11 y 12 (puer
 
 1. Sustituir VPCS por Debian con Apache2.
 
-![Servidor Debian con Apache](img-04.png)
 
 2. Asignar IP estática.
 
-![Configurar IP estática (1/2)](img-03.png)
 
-![Configurar IP estática (2/2)](img-36.png)
 
 Si hacemos ping desde las distintas máquinas veremos que tenemos acceso desde los Distritos 2 y 11.
 
-![Verificar acceso desde D2 y D11](img-19.png)
 
 En primer lugar modificaremos la ACL de R4 para permitirle el acceso al distrito 12.
 
@@ -273,29 +239,22 @@ En primer lugar modificaremos la ACL de R4 para permitirle el acceso al distrito
 
    - En **R4** permitir acceso del distrito 12 antes del `deny ip any any`.
 
-![Modificar ACL R4 (1/2)](img-20.png)
 
-![Modificar ACL R4 (2/2)](img-07.png)
 
 El '45' colocará la regla justo antes del deny any. - Comprobación:
 
-![Comprobación R4](img-31.png)
 
 Ahora denegamos el paso al distrito 2 desde R3 de igual forma modificando la ACL ya establecida.
 
    - En **R3** denegar acceso del distrito 2.
 
-![Denegar D2 en R3 (1/2)](img-32.png)
 
-![Denegar D2 en R3 (2/2)](img-33.png)
 
 Con la ACL aplicada confirmamos acceso desde los distritos 11 y 12.
 
-![Acceso permitido D11 y D12](img-35.png)
 
 Si intentamos conectarnos desde distrito 2 vemos que la conexión no se realiza:
 
-![Conexión denegada desde D2](img-41.png)
 
 ---
 
@@ -303,25 +262,19 @@ Ahora que solo tienen acceso los Distritos 11 y 12 cortaremos este a únicamente
 
    - En **R5** permitir solo puerto 80.
 
-![ACL R5 puerto 80 (1/2)](img-30.png)
 
-![ACL R5 puerto 80 (2/2)](img-11.png)
 
 ### Comprobaciones:
 
 - Ping bloqueado (ICMP ≠ puerto 80).
 
-![Ping bloqueado por puerto](img-18.png)
 
 - Acceso web permitido desde distritos 11 y 12 (navegador Firefox en TinyCore).
 
 Para comprobar que el servidor web es accesible desde los distritos 11 y 12 vamos a añadir 1 tinycore con firefox al switch de dichos distritos.
 
-![TinyCore con Firefox](img-22.png)
 
-![Acceso web permitido](img-23.png)
 
-![Configuración IP en rango](img-24.png)
 
 ---
 
