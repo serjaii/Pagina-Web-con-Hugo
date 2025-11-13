@@ -1,4 +1,4 @@
-# Sitio Hugo — SerjAi
+# Sitio Hugo — SerjAii
 
 Pequeñas instrucciones para construir y desplegar el sitio Hugo.
 
