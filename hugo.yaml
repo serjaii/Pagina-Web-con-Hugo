@@ -1,6 +1,6 @@
 baseURL: "https://serjaii.github.io/Serjaii"
 languageCode: es-es
-theme: stack
+theme: hugo-theme-stack
 title: SerjAii
 
 outputs:
