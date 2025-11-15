@@ -78,9 +78,9 @@ menu:
       name: LinkedIn
       url: https://www.linkedin.com/in/serjaii/
       params:
-        icon: brand-linkedin-logo
+        icon: icon-linkedin
     - identifier: gmail
       name: Gmail
       url: mailto:sjnezsrez@gmail.com
       params:
-        icon: brand-google
+        icon: brand-google-gmail
