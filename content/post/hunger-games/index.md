@@ -18,6 +18,8 @@ Vas a participar en The Hunger Games, un juego de alianzas donde el objetivo es 
 
 El escenario del juego incluye todos los distritos anteriores y el distrito secreto, al que al principio nadie sabe llegar.
 
+![Topología de red](image44.png)
+
 ---
 
 ## Ejercicio 1: Configuración de red
@@ -74,27 +76,27 @@ Una vez asignadas las IP pasaremos con el direccionamiento de los routers.
 **R1:**
 Si el distrito 1 quiere comunicar con el distrito 11 el tráfico irá a R2, en el resto de casos saldrá por la salida por defecto hacia R5.
 
-![Configuración R1](image1.png)
+![Configuración R1](image23.png)
 
 **R2:**
 Como el Distrito 13 es aún desconocido por los participantes ignoraremos su presencia a la hora de hacer el enrutamiento, esto nos ahorrará momentáneamente una línea a la tabla. La comunicación para el distrito 1 saldrá hacia R1 y la salida por defecto será hacia R4.
 
-![Configuración R2](image2.png)
+![Configuración R2](image41.png)
 
 **R3:**
 Similar a R1, salida por defecto camino a R5, excepto mensajes para el distrito 12 que saldrán hasta R4.
 
-![Configuración R3](image3.png)
+![Configuración R3](image11.png)
 
 **R4:**
 Similar a R2, los mensajes a distrito 2 viajarán a R3, el resto hasta R2.
 
-![Configuración R4](image4.png)
+![Configuración R4](image9.png)
 
 **R5:**
 En este caso sí deberemos especificar las rutas hacia cada distrito, la salida por defecto la dejaré mirando hacia el distrito 13 pensando a futuro, pues en cualquier caso no nos va a ahorrar líneas a la tabla de enrutamiento.
 
-![Configuración R5](image5.png)
+![Configuración R5](image16.png)
 
 ### Comprobación de ping entre distritos
 
@@ -106,11 +108,11 @@ En este caso sí deberemos especificar las rutas hacia cada distrito, la salida 
 
 - **Distrito 11:**
 
-![Ping Distrito 1 a 11](image7.png)
+![Ping Distrito 1 a 11](image8.png)
 
 - **Distrito 12:**
 
-![Ping Distrito 1 a 12](image8.png)
+![Ping Distrito 1 a 12](image34.png)
 
 ---
 
@@ -130,15 +132,15 @@ Para esta situación tenemos 2 opciones usando ACL:
 
 Con esto he creado una ACL estándar en el router del distrito 1, todo el tráfico que intente salir desde la interfaz del switch será denegado.
 
-![ACL Distrito 1](image9.png)
+![ACL Distrito 1](image21.png)
 
 **Ping desde fuera hacia Distrito 1:**
 
-![Ping desde fuera](image10.png)
+![Ping desde fuera](image3.png)
 
 **Ping desde Distrito 1 hacia fuera:**
 
-![Ping desde dentro](image11.png)
+![Ping desde dentro](image38.png)
 
 Como podemos ver el mensaje de error es distinto, si hacemos el ping desde un PC fuera del distrito 1 nos encontraremos de cara con la ACL que nos denegará el paso y nos devolverá el mensaje de 'administratively prohibited'. Sin embargo si probamos un ping desde dentro del distrito 1 el mensaje será timeout debido a que la comunicación sí está alcanzando el destino, pero a su vuelta esta se encuentra de nuevo con la ACL que ahora sí, le deniega el paso.
 
@@ -148,11 +150,11 @@ Como podemos ver el mensaje de error es distinto, si hacemos el ping desde un PC
 
 Crearemos una ACL extendida en la interfaz del switch de R4, para denegar todo el tráfico que se intente enviar a los distritos 1 y 2.
 
-![ACL R4](image12.png)
+![ACL R4](image17.png)
 
 Comprobamos ping a cada distrito desde el 12:
 
-![Comprobación pings](image13.png)
+![Comprobación pings](image12.png)
 
 ### Alianza entre pobres y pijos
 
@@ -160,13 +162,13 @@ Comprobamos ping a cada distrito desde el 12:
 
 Ahora sí deberemos modificar nuestras tablas de enrutamiento de R2 y R4. Enviaremos el tráfico por defecto a R5, tendremos que añadir la ruta entre R2 y R4 manualmente.
 
-![Modificación enrutamiento R2](image14.png)
+![Modificación enrutamiento R2](image32.png)
 
-![Modificación enrutamiento R4](image15.png)
+![Modificación enrutamiento R4](image24.png)
 
 No será necesario configurar ACL en este punto ya que toda comunicación entre Distritos 2 y 11 pasará por R5.
 
-![Comprobación comunicación](image16.png)
+![Comprobación comunicación](image40.png)
 
 ---
 
@@ -178,17 +180,17 @@ Al día siguiente, los superpijos deciden que es supercansado poner las direccio
 
 Excluimos la IP del router y las que no queremos que sean asignadas:
 
-![Exclusión IPs](image17.png)
+![Exclusión IPs](image4.png)
 
 Ahora configuramos los parámetros del servidor DHCP:
 
-![Configuración DHCP](image18.png)
+![Configuración DHCP](image14.png)
 
 Comprobamos su funcionamiento:
 
-![Comprobación DHCP 1](image19.png)
+![Comprobación DHCP 1](image30.png)
 
-![Comprobación DHCP 2](image20.png)
+![Comprobación DHCP 2](image28.png)
 
 ---
 
@@ -204,7 +206,7 @@ Cuando pasa una semana, las alianzas y enemistades ya no son solo entre distrito
 
 Como anteriormente se denegó todo el tráfico proveniente del Distrito 12 debemos reescribir dicha ACL, permitiendo las comunicaciones que se indican, será una ACL extendida.
 
-![ACL extendida R4](image21.png)
+![ACL extendida R4](image22.png)
 
 Con esto:
 - Katniss solo puede comunicarse con Peeta, Cato y Thresh.
@@ -212,9 +214,9 @@ Con esto:
 
 **Comprobaciones:**
 
-![Comprobación Katniss](image22.png)
+![Comprobación Katniss](image25.png)
 
-![Comprobación Peeta](image23.png)
+![Comprobación Peeta](image42.png)
 
 Si intentamos hacer un ping denegado en sentido contrario volveremos a encontrarnos con el mensaje de timeout anteriormente explicado.
 
@@ -224,11 +226,11 @@ Si intentamos hacer un ping denegado en sentido contrario volveremos a encontrar
 
 Denegamos la comunicación con una ACL extendida, podemos colocarla tanto en R2 como R3 y R5, en cualquiera de los casos al menos uno de los mensajes tendrán que recorrer más de un router antes de ser eliminado.
 
-![ACL Cato-Thresh](image24.png)
+![ACL Cato-Thresh](image29.png)
 
-![Comprobación Cato-Thresh 1](image25.png)
+![Comprobación Cato-Thresh 1](image31.png)
 
-![Comprobación Cato-Thresh 2](image26.png)
+![Comprobación Cato-Thresh 2](image13.png)
 
 ---
 
@@ -240,29 +242,29 @@ Los juegos del hambre van avanzando y algunos participantes han descubierto al f
 
 Para montar el servidor sustituiremos la máquina VPCS por un Debian al que le instalaremos Apache, le daremos acceso a una nube NAT momentáneamente.
 
-![Instalación Apache](image27.png)
+![Instalación Apache](image43.png)
 
 Instalamos Apache2 y le damos una IP estática, ya podemos quitar la nube:
 
-![IP estática servidor](image28.png)
+![IP estática servidor](image7.png)
 
-![Configuración Apache](image29.png)
+![Configuración Apache](image2.png)
 
 Si hacemos ping desde las distintas máquinas veremos que tenemos acceso desde los Distritos 2 y 11.
 
-![Ping inicial](image30.png)
+![Ping inicial](image5.png)
 
 En primer lugar modificaremos la ACL de R4 para permitirle el acceso al distrito 12.
 
 Como las ACL se leen en orden debemos añadir la línea que permita el paso antes de 'deny ip any any'.
 
-![Modificación ACL R4](image31.png)
+![Modificación ACL R4](image10.png)
 
 El '45' colocará la regla justo antes del deny any.
 
 **Comprobación:**
 
-![Comprobación acceso D12](image32.png)
+![Comprobación acceso D12](image1.png)
 
 Ahora denegamos el paso al distrito 2 desde R3 de igual forma modificando la ACL ya establecida:
 
@@ -270,9 +272,9 @@ Ahora denegamos el paso al distrito 2 desde R3 de igual forma modificando la ACL
 
 **Comprobación:**
 
-![Comprobación acceso permitido](image34.png)
+![Comprobación acceso permitido](image20.png)
 
-![Comprobación acceso denegado D2](image35.png)
+![Comprobación acceso denegado D2](image18.png)
 
 Ahora que solo tienen acceso los Distritos 11 y 12 cortaremos este a únicamente el puerto 80 mediante una ACL en R5:
 
@@ -280,17 +282,23 @@ Ahora que solo tienen acceso los Distritos 11 y 12 cortaremos este a únicamente
 
 Si ahora probamos a volver a hacer un ping nos encontramos con que la ACL nos lo cortará, esto es debido a que el protocolo ICMP (ping) no trabaja en el puerto 80.
 
-![Ping bloqueado](image37.png)
+![Ping bloqueado](image19.png)
 
 Para comprobar que el servidor web es accesible desde los distritos 11 y 12 vamos a añadir 1 tinycore con firefox al switch de dichos distritos.
 
-![TinyCore setup](image38.png)
+![TinyCore setup](image26.png)
 
 Será necesario configurar la IP de ambas máquinas en rango. Una vez hecho podremos acceder al servidor web.
 
-![Acceso web Distrito 12](image39.png)
+![Configuración IP TinyCore](image27.png)
 
-![Acceso web Distrito 11](image40.png)
+![Acceso web Distrito 12](image35.png)
+
+![Acceso web Distrito 11](image15.png)
+
+![Servidor web funcionando](image39.png)
+
+![Página web del Distrito 13](image37.png)
 
 ---
 
