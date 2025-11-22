@@ -102,17 +102,15 @@ En este caso sí deberemos especificar las rutas hacia cada distrito, la salida 
 
 **Distrito 1:**
 
-- **Distrito 2:**
+![Ping desde Distrito 1](image6.png)
 
-![Ping Distrito 1 a 2](image6.png)
+**Distrito 2:**
 
-- **Distrito 11:**
+![Ping desde Distrito 2](image34.png)
 
-![Ping Distrito 1 a 11](image8.png)
+**Distrito 11:**
 
-- **Distrito 12:**
-
-![Ping Distrito 1 a 12](image34.png)
+![Ping desde Distrito 11](image8.png)
 
 ---
 
@@ -132,15 +130,15 @@ Para esta situación tenemos 2 opciones usando ACL:
 
 Con esto he creado una ACL estándar en el router del distrito 1, todo el tráfico que intente salir desde la interfaz del switch será denegado.
 
-![ACL Distrito 1](image21.png)
+![ACL Distrito 1](image3.png)
 
 **Ping desde fuera hacia Distrito 1:**
 
-![Ping desde fuera](image3.png)
+![Ping desde fuera](image38.png)
 
 **Ping desde Distrito 1 hacia fuera:**
 
-![Ping desde dentro](image38.png)
+![Ping desde dentro](image2.png)
 
 Como podemos ver el mensaje de error es distinto, si hacemos el ping desde un PC fuera del distrito 1 nos encontraremos de cara con la ACL que nos denegará el paso y nos devolverá el mensaje de 'administratively prohibited'. Sin embargo si probamos un ping desde dentro del distrito 1 el mensaje será timeout debido a que la comunicación sí está alcanzando el destino, pero a su vuelta esta se encuentra de nuevo con la ACL que ahora sí, le deniega el paso.
 
@@ -162,13 +160,9 @@ Comprobamos ping a cada distrito desde el 12:
 
 Ahora sí deberemos modificar nuestras tablas de enrutamiento de R2 y R4. Enviaremos el tráfico por defecto a R5, tendremos que añadir la ruta entre R2 y R4 manualmente.
 
-![Modificación enrutamiento R2](image32.png)
-
-![Modificación enrutamiento R4](image24.png)
+![Modificación enrutamiento R4](image40.png)
 
 No será necesario configurar ACL en este punto ya que toda comunicación entre Distritos 2 y 11 pasará por R5.
-
-![Comprobación comunicación](image40.png)
 
 ---
 
@@ -214,9 +208,9 @@ Con esto:
 
 **Comprobaciones:**
 
-![Comprobación Katniss](image25.png)
+![Comprobación Katniss](image31.png)
 
-![Comprobación Peeta](image42.png)
+![Comprobación Peeta](image29.png)
 
 Si intentamos hacer un ping denegado en sentido contrario volveremos a encontrarnos con el mensaje de timeout anteriormente explicado.
 
@@ -226,11 +220,9 @@ Si intentamos hacer un ping denegado en sentido contrario volveremos a encontrar
 
 Denegamos la comunicación con una ACL extendida, podemos colocarla tanto en R2 como R3 y R5, en cualquiera de los casos al menos uno de los mensajes tendrán que recorrer más de un router antes de ser eliminado.
 
-![ACL Cato-Thresh](image29.png)
+![ACL Cato-Thresh](image43.png)
 
-![Comprobación Cato-Thresh 1](image31.png)
-
-![Comprobación Cato-Thresh 2](image13.png)
+![Comprobación Cato-Thresh](image7.png)
 
 ---
 
@@ -242,17 +234,11 @@ Los juegos del hambre van avanzando y algunos participantes han descubierto al f
 
 Para montar el servidor sustituiremos la máquina VPCS por un Debian al que le instalaremos Apache, le daremos acceso a una nube NAT momentáneamente.
 
-![Instalación Apache](image43.png)
+![Nube NAT](image5.png)
 
-Instalamos Apache2 y le damos una IP estática, ya podemos quitar la nube:
-
-![IP estática servidor](image7.png)
-
-![Configuración Apache](image2.png)
+Instalamos Apache2 y le damos una IP estática, ya podemos quitar la nube.
 
 Si hacemos ping desde las distintas máquinas veremos que tenemos acceso desde los Distritos 2 y 11.
-
-![Ping inicial](image5.png)
 
 En primer lugar modificaremos la ACL de R4 para permitirle el acceso al distrito 12.
 
@@ -272,31 +258,27 @@ Ahora denegamos el paso al distrito 2 desde R3 de igual forma modificando la ACL
 
 **Comprobación:**
 
-![Comprobación acceso permitido](image20.png)
-
 ![Comprobación acceso denegado D2](image18.png)
 
 Ahora que solo tienen acceso los Distritos 11 y 12 cortaremos este a únicamente el puerto 80 mediante una ACL en R5:
 
-![ACL puerto 80 R5](image36.png)
+![ACL puerto 80 R5](image19.png)
+
+![Aplicar ACL R5](image35.png)
 
 Si ahora probamos a volver a hacer un ping nos encontramos con que la ACL nos lo cortará, esto es debido a que el protocolo ICMP (ping) no trabaja en el puerto 80.
 
-![Ping bloqueado](image19.png)
+![Ping bloqueado](image26.png)
 
 Para comprobar que el servidor web es accesible desde los distritos 11 y 12 vamos a añadir 1 tinycore con firefox al switch de dichos distritos.
 
-![TinyCore setup](image26.png)
+![TinyCore setup](image39.png)
 
 Será necesario configurar la IP de ambas máquinas en rango. Una vez hecho podremos acceder al servidor web.
 
-![Configuración IP TinyCore](image27.png)
-
-![Acceso web Distrito 12](image35.png)
+![Acceso web Distrito 12](image36.png)
 
 ![Acceso web Distrito 11](image15.png)
-
-![Servidor web funcionando](image39.png)
 
 ![Página web del Distrito 13](image37.png)
 
