@@ -4,7 +4,7 @@ author: "Sergio Jiménez"
 date: "2025-12-02"
 categories: ["Linux", "Debian", "Automation", "DevOps"]
 tags: ["debian", "preseed", "xorriso", "bash", "uefi", "bios", "network-install"]
-image: "img/debian-automation-cover-custom.jpg"
+image: "cover.jpg"
 ---
 
 # Automatización de Instalación de Debian 13 con Preseed y Custom ISO
