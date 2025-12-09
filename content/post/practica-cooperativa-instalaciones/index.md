@@ -31,18 +31,19 @@ serjaii@db:~$ sudo apt policy libaio1t64 libaio-dev unixodbc rlwrap alien net-to
 
 -
 
-libaio1t64: dependencia de Entrada/Salida Asíncrona, obligatoria para
+- **libaio1t64**: dependencia de Entrada/Salida Asíncrona, obligatoria para
 Oracle.
-libaio-dev: contiene los archivos de cabecera y enlaces simbólicos para
+- **libaio-dev**: contiene los archivos de cabecera y enlaces simbólicos para
 que los desarrolladores puedan compilar programas que usen la librería
 libaio.
-unixodbc: librerías ODBC necesarias para Oracle.
-rlwrap: mejora la experiencia de SQL*Plus en terminal.
-bc: cálculos usados por scripts de Oracle.
-ksh: KornShell, requerida por algunos scripts de instalación.
-alien: convierte paquete .rpm a .deb.
-not-tools: incluye netstat, usado por Oracle.
-unzip: para SQL*Plus más tarde.
+
+- **unixodbc**: librerías ODBC necesarias para Oracle.
+- **rlwrap**: mejora la experiencia de SQL*Plus en terminal.
+- **bc**: cálculos usados por scripts de Oracle.
+- **ksh**: KornShell, requerida por algunos scripts de instalación.
+- **alien**: convierte paquete .rpm a .deb.
+- **not-tools**: incluye netstat, usado por Oracle.
+- **unzip**: para SQL*Plus más tarde.
 
 - Configuramos una ip estática para facilitar futuras conexiones remotas.
 
@@ -56,8 +57,8 @@ libaio.so1, para que Oracle reconozca la librería.
 Comprobación:
 ```bash
 serjaii@db:~$ ls -l /usr/lib/x86_64-linux-gnu/libaio.so.1
-```
 lrwxrwxrwx 1 root root 40 oct 8 20:22 /usr/lib/x86_64-linuxgnu/libaio.so.1 -> /usr/lib/x86_64-linux-gnu/libaio.so.1t64
+```
 
 ### 2.Instalación del servidor
 
@@ -151,10 +152,10 @@ de Oracle.
 ```bash
 serjaii@db:~$ sudo apt install libaio1t64 libaio-dev rlwrap wget p7zip-full -y -
 ```
-libaio1t64: librería de I/O asíncrona, que lo necesita Oracle en tiempo
+- **libaio1t64**: librería de I/O asíncrona, que lo necesita Oracle en tiempo
 de ejecución.
-libaio-dev: cabeceras y enlaces simbólicos para compilación.
-rlwrap: permite usar historial y edición de comandos en sqlplus.
+- **libaio-dev**: cabeceras y enlaces simbólicos para compilación.
+- **rlwrap**: permite usar historial y edición de comandos en sqlplus.
 wget: para descargar los paquetes desde la web de Oracle.
 p7zip-full: descomprime los .zip de Oracle.
 
@@ -658,7 +659,97 @@ GRANT ALL PRIVILEGES ON SEQUENCES TO david;
 con el usuario que hemos creado también ahora, y comenzamos con la creación
 de tablas e inserción de datos.
 ```bash
-serjaii@db:~$ psql -h IP_ServidorPostgreSQL -p 5432 -U nombreUsuarioPostgreSQL -d baseDatosPostgreSQL Creación de la tabla clientes. CREATE nombre apellidos TABLE id VARCHAR(15) VARCHAR(30) clientes( NUMERIC, NOT NULL, NOT NULL, email VARCHAR(50), telefono NUMERIC(9), CONSTRAINT pk_idCliente PRIMARY KEY (id), CONSTRAINT uq_email UNIQUE (email) ); Creación de la tabla habitaciones. CREATE TABLE habitaciones( id NUMERIC, numero NUMERIC NOT NULL, tipo VARCHAR(20) NOT NULL, precio NUMERIC(10,2) NOT NULL, CONSTRAINT pk_idHabitacion PRIMARY KEY (id), CONSTRAINT uq_numero UNIQUE (numero), CONSTRAINT ck_tipoHabitacion CHECK (tipo IN ('Individual', 'Doble', 'Suite', 'Familiar')) ); Creación de la tabla reservas. CREATE TABLE reservas( id NUMERIC, idCliente NUMERIC NOT NULL, idHabitacion NUMERIC NOT NULL, fecha_entrada DATE NOT NULL, fecha_salida DATE NOT NULL, CONSTRAINT pk_idReservas PRIMARY KEY (id), CONSTRAINT fk_idCliente FOREIGN KEY (idCliente) REFERENCES clientes(id), CONSTRAINT fk_idHabitacion FOREIGN KEY (idHabitacion) REFERENCES habitaciones(id) ); Creación de la tabla pagos. CREATE TABLE pagos( id NUMERIC, idReserva NUMERIC NOT NULL, metodoPago VARCHAR(20) NOT NULL, precio NUMERIC(10,2) NOT NULL, fechaPago DATE NOT NULL, CONSTRAINT pk_idPagos PRIMARY KEY (id), CONSTRAINT fk_idReserva FOREIGN KEY (idReserva) REFERENCES reservas(id), CONSTRAINT ck_metodoPago CHECK (metodoPago IN ('Tarjeta', 'Efectivo', 'PayPal')) ); Inserción de datos en la tabla clientes. INSERT INTO clientes (id, nombre, apellidos, email, telefono) VALUES (1, 'David', 'Dorado Lopez', 'davidd@gmail.com', 600111222); INSERT INTO clientes (id, nombre, apellidos, email, telefono) VALUES (2, 'Maria', 'Gomez Perez', 'mariagom@gmail.com', 600333444); INSERT INTO clientes (id, nombre, apellidos, email, telefono) VALUES (3, 'Jorge', 'Santos Diaz', 'jogesantos@gmail.com', 600555666); INSERT INTO clientes (id, nombre, apellidos, email, telefono) VALUES (4, 'Lucia', 'Romero Garcia', 'luciarom@yahoot.es', 600777888); INSERT INTO clientes (id, nombre, apellidos, email, telefono) VALUES (5, 'Pablo', 'Ruiz Torres', 'pablo@gmail.com', 600999000); INSERT INTO clientes (id, nombre, apellidos, email, telefono) VALUES (6, 'Sofia', 'Martinez Leon', 'sofleon@yahoot.es', 601111222); INSERT INTO clientes (id, nombre, apellidos, email, telefono) VALUES (7, 'Alberto', 'Navas Cruz', 'albertonavas@yahoot.es', 601333444); INSERT INTO clientes (id, nombre, apellidos, email, telefono) VALUES (8, 'Marta', 'Lopez Gil', 'marta@gmail.com', 601555666); INSERT INTO clientes (id, nombre, apellidos, email, telefono) VALUES (9, 'Raul', 'Castro Vega', 'raulcastro@gmail.com', 601777888); INSERT INTO clientes (id, nombre, apellidos, email, telefono) VALUES (10, 'Laura', 'Morales Cano', 'laura@gmail.com', 601999000); Inserción de datos en la tabla habitaciones. INSERT INTO habitaciones (id, numero, tipo, precio) VALUES (1, 101, 'Individual', 50); INSERT INTO habitaciones (id, numero, tipo, precio) VALUES (2, 102, 'Doble', 80); INSERT INTO habitaciones (id, numero, tipo, precio) VALUES (3, 103, 'Suite', 150); INSERT INTO habitaciones (id, numero, tipo, precio) VALUES (4, 104, 'Individual', 50); INSERT INTO habitaciones (id, numero, tipo, precio) VALUES (5, 105, 'Doble', 80); INSERT INTO habitaciones (id, numero, tipo, precio) VALUES (6, 106, 'Suite', 150); Inserción de datos en la tabla reservas. INSERT INTO reservas (id, idCliente, idHabitacion, fecha_entrada, fecha_salida) VALUES (1, 1, 1, TO_DATE('2025-10-01', 'YYYY-MM-DD'), TO_DATE('2025-10-05', 'YYYY-MM-DD')); INSERT INTO reservas (id, idCliente, idHabitacion, fecha_entrada, fecha_salida) VALUES (2, 2, 2, TO_DATE('2025-10-03', 'YYYY-MM-DD'), TO_DATE('2025-10-06', 'YYYY-MM-DD')); INSERT INTO reservas (id, idCliente, idHabitacion, fecha_entrada, fecha_salida) TO_DATE('2025-10-02', TO_DATE('2025-10-04', VALUES (3, 3, 3, 'YYYY-MM-DD'), 'YYYY-MM-DD')); INSERT INTO reservas (id, idCliente, idHabitacion, fecha_entrada, fecha_salida) VALUES (4, 4, 4, TO_DATE('2025-10-05', 'YYYY-MM-DD'), TO_DATE('2025-10-10', 'YYYY-MM-DD')); INSERT INTO reservas (id, idCliente, idHabitacion, fecha_entrada, fecha_salida) VALUES (5, 5, 5, TO_DATE('2025-10-07', 'YYYY-MM-DD'), TO_DATE('2025-10-12', 'YYYY-MM-DD')); INSERT INTO reservas (id, idCliente, idHabitacion, fecha_entrada, fecha_salida) VALUES (6, 6, 6, TO_DATE('2025-10-01', 'YYYY-MM-DD'), TO_DATE('2025-10-03', 'YYYY-MM-DD')); Inserción de datos en la tabla pagos. INSERT INTO pagos (id, idReserva, metodoPago, precio, fechaPago) VALUES (1, 1, 'Tarjeta', 200, TO_DATE('2025-10-01', 'YYYY-MM-DD')); INSERT INTO pagos (id, idReserva, metodoPago, precio, fechaPago) VALUES (2, 2, 'Efectivo', 240, TO_DATE('2025-10-03', 'YYYY-MM-DD')); INSERT INTO pagos (id, idReserva, metodoPago, precio, fechaPago) VALUES (3, 3, 'PayPal', 300, TO_DATE('2025-10-02', 'YYYY-MM-DD')); INSERT INTO pagos (id, idReserva, metodoPago, precio, fechaPago) VALUES (4, 4, 'Tarjeta', 400, TO_DATE('2025-10-05', 'YYYY-MM-DD')); INSERT INTO pagos (id, idReserva, metodoPago, precio, fechaPago) VALUES (5, 5, 'Efectivo', 320, TO_DATE('2025-10-07', 'YYYY-MM-DD')); INSERT INTO pagos (id, idReserva, metodoPago, precio, fechaPago) VALUES (6, 6, 'PayPal', 150, TO_DATE('2025-10-01', 'YYYY-MM-DD'));
+serjaii@db:~$ psql -h IP_ServidorPostgreSQL -p 5432 -U nombreUsuarioPostgreSQL -d baseDatosPostgreSQL 
+-- Creación de la tabla clientes.
+ CREATE nombre apellidos TABLE id VARCHAR(15) VARCHAR(30) clientes( NUMERIC, NOT NULL, NOT NULL, email VARCHAR(50), telefono NUMERIC(9), 
+  CONSTRAINT pk_idCliente PRIMARY KEY (id), 
+  CONSTRAINT uq_email UNIQUE (email) );
+ 
+-- Creación de la tabla habitaciones.
+ 
+CREATE TABLE habitaciones( id NUMERIC, numero NUMERIC NOT NULL, tipo VARCHAR(20) NOT NULL, precio NUMERIC(10,2) NOT NULL, 
+  CONSTRAINT pk_idHabitacion PRIMARY KEY (id), 
+  CONSTRAINT uq_numero UNIQUE (numero), 
+  CONSTRAINT ck_tipoHabitacion CHECK (tipo IN ('Individual', 'Doble', 'Suite', 'Familiar')) );
+ 
+-- Creación de la tabla reservas.
+ 
+CREATE TABLE reservas( id NUMERIC, idCliente NUMERIC NOT NULL, idHabitacion NUMERIC NOT NULL, fecha_entrada DATE NOT NULL, fecha_salida DATE NOT NULL, 
+  CONSTRAINT pk_idReservas PRIMARY KEY (id), 
+  CONSTRAINT fk_idCliente FOREIGN KEY (idCliente) REFERENCES clientes(id), 
+  CONSTRAINT fk_idHabitacion FOREIGN KEY (idHabitacion) REFERENCES habitaciones(id) );
+ 
+-- Creación de la tabla pagos.
+ 
+CREATE TABLE pagos( id NUMERIC, idReserva NUMERIC NOT NULL, metodoPago VARCHAR(20) NOT NULL, precio NUMERIC(10,2) NOT NULL, fechaPago DATE NOT NULL, 
+  CONSTRAINT pk_idPagos PRIMARY KEY (id), 
+  CONSTRAINT fk_idReserva FOREIGN KEY (idReserva) REFERENCES reservas(id), 
+  CONSTRAINT ck_metodoPago CHECK (metodoPago IN ('Tarjeta', 'Efectivo', 'PayPal')) );
+ 
+-- Inserción de datos en la tabla clientes.
+ 
+INSERT INTO clientes (id, nombre, apellidos, email, telefono) VALUES (1, 'David', 'Dorado Lopez', 'davidd@gmail.com', 600111222);
+ 
+INSERT INTO clientes (id, nombre, apellidos, email, telefono) VALUES (2, 'Maria', 'Gomez Perez', 'mariagom@gmail.com', 600333444);
+ 
+INSERT INTO clientes (id, nombre, apellidos, email, telefono) VALUES (3, 'Jorge', 'Santos Diaz', 'jogesantos@gmail.com', 600555666);
+ 
+INSERT INTO clientes (id, nombre, apellidos, email, telefono) VALUES (4, 'Lucia', 'Romero Garcia', 'luciarom@yahoot.es', 600777888);
+ 
+INSERT INTO clientes (id, nombre, apellidos, email, telefono) VALUES (5, 'Pablo', 'Ruiz Torres', 'pablo@gmail.com', 600999000);
+ 
+INSERT INTO clientes (id, nombre, apellidos, email, telefono) VALUES (6, 'Sofia', 'Martinez Leon', 'sofleon@yahoot.es', 601111222);
+ 
+INSERT INTO clientes (id, nombre, apellidos, email, telefono) VALUES (7, 'Alberto', 'Navas Cruz', 'albertonavas@yahoot.es', 601333444);
+ 
+INSERT INTO clientes (id, nombre, apellidos, email, telefono) VALUES (8, 'Marta', 'Lopez Gil', 'marta@gmail.com', 601555666);
+ 
+INSERT INTO clientes (id, nombre, apellidos, email, telefono) VALUES (9, 'Raul', 'Castro Vega', 'raulcastro@gmail.com', 601777888);
+ 
+INSERT INTO clientes (id, nombre, apellidos, email, telefono) VALUES (10, 'Laura', 'Morales Cano', 'laura@gmail.com', 601999000);
+ 
+-- Inserción de datos en la tabla habitaciones.
+ 
+INSERT INTO habitaciones (id, numero, tipo, precio) VALUES (1, 101, 'Individual', 50);
+ 
+INSERT INTO habitaciones (id, numero, tipo, precio) VALUES (2, 102, 'Doble', 80);
+ 
+INSERT INTO habitaciones (id, numero, tipo, precio) VALUES (3, 103, 'Suite', 150);
+ 
+INSERT INTO habitaciones (id, numero, tipo, precio) VALUES (4, 104, 'Individual', 50);
+ 
+INSERT INTO habitaciones (id, numero, tipo, precio) VALUES (5, 105, 'Doble', 80);
+ 
+INSERT INTO habitaciones (id, numero, tipo, precio) VALUES (6, 106, 'Suite', 150);
+ 
+-- Inserción de datos en la tabla reservas.
+ 
+INSERT INTO reservas (id, idCliente, idHabitacion, fecha_entrada, fecha_salida) VALUES (1, 1, 1, TO_DATE('2025-10-01', 'YYYY-MM-DD'), TO_DATE('2025-10-05', 'YYYY-MM-DD'));
+ 
+INSERT INTO reservas (id, idCliente, idHabitacion, fecha_entrada, fecha_salida) VALUES (2, 2, 2, TO_DATE('2025-10-03', 'YYYY-MM-DD'), TO_DATE('2025-10-06', 'YYYY-MM-DD'));
+ 
+INSERT INTO reservas (id, idCliente, idHabitacion, fecha_entrada, fecha_salida) TO_DATE('2025-10-02', TO_DATE('2025-10-04', VALUES (3, 3, 3, 'YYYY-MM-DD'), 'YYYY-MM-DD'));
+ 
+INSERT INTO reservas (id, idCliente, idHabitacion, fecha_entrada, fecha_salida) VALUES (4, 4, 4, TO_DATE('2025-10-05', 'YYYY-MM-DD'), TO_DATE('2025-10-10', 'YYYY-MM-DD'));
+ 
+INSERT INTO reservas (id, idCliente, idHabitacion, fecha_entrada, fecha_salida) VALUES (5, 5, 5, TO_DATE('2025-10-07', 'YYYY-MM-DD'), TO_DATE('2025-10-12', 'YYYY-MM-DD'));
+ 
+INSERT INTO reservas (id, idCliente, idHabitacion, fecha_entrada, fecha_salida) VALUES (6, 6, 6, TO_DATE('2025-10-01', 'YYYY-MM-DD'), TO_DATE('2025-10-03', 'YYYY-MM-DD'));
+ 
+-- Inserción de datos en la tabla pagos.
+ 
+INSERT INTO pagos (id, idReserva, metodoPago, precio, fechaPago) VALUES (1, 1, 'Tarjeta', 200, TO_DATE('2025-10-01', 'YYYY-MM-DD'));
+ 
+INSERT INTO pagos (id, idReserva, metodoPago, precio, fechaPago) VALUES (2, 2, 'Efectivo', 240, TO_DATE('2025-10-03', 'YYYY-MM-DD'));
+ 
+INSERT INTO pagos (id, idReserva, metodoPago, precio, fechaPago) VALUES (3, 3, 'PayPal', 300, TO_DATE('2025-10-02', 'YYYY-MM-DD'));
+ 
+INSERT INTO pagos (id, idReserva, metodoPago, precio, fechaPago) VALUES (4, 4, 'Tarjeta', 400, TO_DATE('2025-10-05', 'YYYY-MM-DD'));
+ 
+INSERT INTO pagos (id, idReserva, metodoPago, precio, fechaPago) VALUES (5, 5, 'Efectivo', 320, TO_DATE('2025-10-07', 'YYYY-MM-DD'));
+ 
+INSERT INTO pagos (id, idReserva, metodoPago, precio, fechaPago) VALUES (6, 6, 'PayPal', 150, TO_DATE('2025-10-01', 'YYYY-MM-DD'));
+
 ```
 
 ## Instalación Servidor MySQL en Debian 13.
@@ -774,7 +865,101 @@ MariaDB [(none)]> FLUSH PRIVILEGES;
 con el usuario que hemos creado también ahora, y comenzamos con la creación
 de tablas e inserción de datos.
 ```bash
-serjaii@db:~$ mysql -h IP_SERVIDOR_MYSQL -P 3306 -u usuario -p MariaDB [(none)]> USE hotel; Creación de la tabla clientes. CREATE TABLE clientes( id NUMERIC, nombre VARCHAR(15) NOT NULL, apellidos VARCHAR(30) NOT NULL, email VARCHAR(50), telefono NUMERIC(9), CONSTRAINT pk_idCliente PRIMARY KEY (id), CONSTRAINT uq_email UNIQUE (email) ); Creación de la tabla habitaciones. CREATE TABLE habitaciones( id NUMERIC, numero NUMERIC NOT NULL, tipo VARCHAR(20) NOT NULL, precio NUMERIC(10,2) NOT NULL, CONSTRAINT pk_idHabitacion PRIMARY KEY (id), CONSTRAINT uq_numero UNIQUE (numero), CONSTRAINT ck_tipoHabitacion CHECK (tipo IN ('Individual', 'Doble', 'Suite', 'Familiar')) ); Creación de la tabla reservas. CREATE TABLE reservas( id NUMERIC, idCliente NUMERIC NOT NULL, idHabitacion NUMERIC NOT NULL, fecha_entrada DATE NOT NULL, fecha_salida DATE NOT NULL, CONSTRAINT pk_idReservas PRIMARY KEY (id), CONSTRAINT fk_idCliente FOREIGN KEY (idCliente) REFERENCES clientes(id), CONSTRAINT fk_idHabitacion FOREIGN KEY (idHabitacion) REFERENCES habitaciones(id) ); Creación de la tabla pagos. CREATE TABLE pagos( id NUMERIC, idReserva NUMERIC NOT NULL, metodoPago VARCHAR(20) NOT NULL, precio NUMERIC(10,2) NOT NULL, fechaPago DATE NOT NULL, CONSTRAINT pk_idPagos PRIMARY KEY (id), CONSTRAINT fk_idReserva FOREIGN KEY (idReserva) REFERENCES reservas(id), CONSTRAINT ck_metodoPago CHECK (metodoPago IN ('Tarjeta', 'Efectivo', 'PayPal')) ); Inserción de datos en la tabla clientes. INSERT INTO clientes (id, nombre, apellidos, email, telefono) VALUES (1, 'David', 'Dorado Lopez', 'davidd@gmail.com', 600111222); INSERT INTO clientes (id, nombre, apellidos, email, telefono) VALUES (2, 'Maria', 'Gomez Perez', 'mariagom@gmail.com', 600333444); INSERT INTO clientes (id, nombre, apellidos, email, telefono) VALUES (3, 'Jorge', 'Santos Diaz', 'jogesantos@gmail.com', 600555666); INSERT INTO clientes (id, nombre, apellidos, email, telefono) VALUES (4, 'Lucia', 'Romero Garcia', 'luciarom@yahoot.es', 600777888); INSERT INTO clientes (id, nombre, apellidos, email, telefono) VALUES (5, 'Pablo', 'Ruiz Torres', 'pablo@gmail.com', 600999000); INSERT INTO clientes (id, nombre, apellidos, email, telefono) (6, 'Sofia', 601111222); 'Martinez Leon', VALUES 'sofleon@yahoot.es', INSERT INTO clientes (id, nombre, apellidos, email, telefono) VALUES (7, 'Alberto', 'Navas Cruz', 'albertonavas@yahoot.es', 601333444); INSERT INTO clientes (id, nombre, apellidos, email, telefono) VALUES (8, 'Marta', 'Lopez Gil', 'marta@gmail.com', 601555666); INSERT INTO clientes (id, nombre, apellidos, email, telefono) VALUES (9, 'Raul', 'Castro Vega', 'raulcastro@gmail.com', 601777888); INSERT INTO clientes (id, nombre, apellidos, email, telefono) VALUES (10, 'Laura', 'Morales Cano', 'laura@gmail.com', 601999000); Inserción de datos en la tabla habitaciones. INSERT INTO habitaciones (id, numero, tipo, precio) VALUES (1, 101, 'Individual', 50); INSERT INTO habitaciones (id, numero, tipo, precio) VALUES (2, 102, 'Doble', 80); INSERT INTO habitaciones (id, numero, tipo, precio) VALUES (3, 103, 'Suite', 150); INSERT INTO habitaciones (id, numero, tipo, precio) VALUES (4, 104, 'Individual', 50); INSERT INTO habitaciones (id, numero, tipo, precio) VALUES (5, 105, 'Doble', 80); INSERT INTO habitaciones (id, numero, tipo, precio) VALUES (6, 106, 'Suite', 150); Inserción de datos en la tabla reservas. INSERT INTO reservas (id, idCliente, idHabitacion, fecha_entrada, fecha_salida) VALUES (1, 1, 1, '2025-1063 01', '2025-10-05'); INSERT INTO reservas (id, idCliente, idHabitacion, fecha_entrada, fecha_salida) VALUES (2, 2, 2, '2025-1003', '2025-10-06'); INSERT INTO reservas (id, idCliente, idHabitacion, fecha_entrada, fecha_salida) VALUES (3, 3, 3, '2025-1002', '2025-10-04'); INSERT INTO reservas (id, idCliente, idHabitacion, fecha_entrada, fecha_salida) VALUES (4, 4, 4, '2025-1005', '2025-10-10'); INSERT INTO reservas (id, idCliente, idHabitacion, fecha_entrada, fecha_salida) VALUES (5, 5, 5, '2025-1007', '2025-10-12'); INSERT INTO reservas (id, idCliente, idHabitacion, fecha_entrada, fecha_salida) VALUES (6, 6, 6, '2025-1001', '2025-10-03'); Inserción de datos en la tabla pagos. INSERT INTO pagos (id, idReserva, metodoPago, precio, fechaPago) VALUES (1, 1, 'Tarjeta', 200, '2025-10-01'); INSERT INTO pagos (id, idReserva, metodoPago, precio, fechaPago) VALUES (2, 2, 'Efectivo', 240, '2025-1064 03'); INSERT INTO pagos (id, idReserva, metodoPago, precio, fechaPago) VALUES (3, 3, 'PayPal', 300, '2025-10-02'); INSERT INTO pagos (id, idReserva, metodoPago, precio, fechaPago) VALUES (4, 4, 'Tarjeta', 400, '2025-10-05'); INSERT INTO pagos (id, idReserva, metodoPago, precio, fechaPago) VALUES (5, 5, 'Efectivo', 320, '2025-1007'); INSERT INTO pagos (id, idReserva, metodoPago, precio, fechaPago) VALUES (6, 6, 'PayPal', 150, '2025-10-01');
+serjaii@db:~$ mysql -h IP_SERVIDOR_MYSQL -P 3306 -u usuario -p 
+MariaDB [(none)]>  
+USE hotel;
+ 
+-- Creación de la tabla clientes.
+ 
+CREATE TABLE clientes( id NUMERIC, nombre VARCHAR(15) NOT NULL, apellidos VARCHAR(30) NOT NULL, email VARCHAR(50), telefono NUMERIC(9), 
+  CONSTRAINT pk_idCliente PRIMARY KEY (id), 
+  CONSTRAINT uq_email UNIQUE (email) );
+ 
+-- Creación de la tabla habitaciones.
+ 
+CREATE TABLE habitaciones( id NUMERIC, numero NUMERIC NOT NULL, tipo VARCHAR(20) NOT NULL, precio NUMERIC(10,2) NOT NULL, 
+  CONSTRAINT pk_idHabitacion PRIMARY KEY (id), 
+  CONSTRAINT uq_numero UNIQUE (numero), 
+  CONSTRAINT ck_tipoHabitacion CHECK (tipo IN ('Individual', 'Doble', 'Suite', 'Familiar')) );
+ 
+-- Creación de la tabla reservas.
+ 
+CREATE TABLE reservas( id NUMERIC, idCliente NUMERIC NOT NULL, idHabitacion NUMERIC NOT NULL, fecha_entrada DATE NOT NULL, fecha_salida DATE NOT NULL, 
+  CONSTRAINT pk_idReservas PRIMARY KEY (id), 
+  CONSTRAINT fk_idCliente FOREIGN KEY (idCliente) REFERENCES clientes(id), 
+  CONSTRAINT fk_idHabitacion FOREIGN KEY (idHabitacion) REFERENCES habitaciones(id) );
+ 
+-- Creación de la tabla pagos.
+ 
+CREATE TABLE pagos( id NUMERIC, idReserva NUMERIC NOT NULL, metodoPago VARCHAR(20) NOT NULL, precio NUMERIC(10,2) NOT NULL, fechaPago DATE NOT NULL, 
+  CONSTRAINT pk_idPagos PRIMARY KEY (id), 
+  CONSTRAINT fk_idReserva FOREIGN KEY (idReserva) REFERENCES reservas(id), 
+  CONSTRAINT ck_metodoPago CHECK (metodoPago IN ('Tarjeta', 'Efectivo', 'PayPal')) );
+ 
+-- Inserción de datos en la tabla clientes.
+ 
+INSERT INTO clientes (id, nombre, apellidos, email, telefono) VALUES (1, 'David', 'Dorado Lopez', 'davidd@gmail.com', 600111222);
+ 
+INSERT INTO clientes (id, nombre, apellidos, email, telefono) VALUES (2, 'Maria', 'Gomez Perez', 'mariagom@gmail.com', 600333444);
+ 
+INSERT INTO clientes (id, nombre, apellidos, email, telefono) VALUES (3, 'Jorge', 'Santos Diaz', 'jogesantos@gmail.com', 600555666);
+ 
+INSERT INTO clientes (id, nombre, apellidos, email, telefono) VALUES (4, 'Lucia', 'Romero Garcia', 'luciarom@yahoot.es', 600777888);
+ 
+INSERT INTO clientes (id, nombre, apellidos, email, telefono) VALUES (5, 'Pablo', 'Ruiz Torres', 'pablo@gmail.com', 600999000);
+ 
+INSERT INTO clientes (id, nombre, apellidos, email, telefono) (6, 'Sofia', 601111222);
+ 'Martinez Leon', VALUES 'sofleon@yahoot.es', 
+INSERT INTO clientes (id, nombre, apellidos, email, telefono) VALUES (7, 'Alberto', 'Navas Cruz', 'albertonavas@yahoot.es', 601333444);
+ 
+INSERT INTO clientes (id, nombre, apellidos, email, telefono) VALUES (8, 'Marta', 'Lopez Gil', 'marta@gmail.com', 601555666);
+ 
+INSERT INTO clientes (id, nombre, apellidos, email, telefono) VALUES (9, 'Raul', 'Castro Vega', 'raulcastro@gmail.com', 601777888);
+ 
+INSERT INTO clientes (id, nombre, apellidos, email, telefono) VALUES (10, 'Laura', 'Morales Cano', 'laura@gmail.com', 601999000);
+ 
+-- Inserción de datos en la tabla habitaciones.
+ 
+INSERT INTO habitaciones (id, numero, tipo, precio) VALUES (1, 101, 'Individual', 50);
+ 
+INSERT INTO habitaciones (id, numero, tipo, precio) VALUES (2, 102, 'Doble', 80);
+ 
+INSERT INTO habitaciones (id, numero, tipo, precio) VALUES (3, 103, 'Suite', 150);
+ 
+INSERT INTO habitaciones (id, numero, tipo, precio) VALUES (4, 104, 'Individual', 50);
+ 
+INSERT INTO habitaciones (id, numero, tipo, precio) VALUES (5, 105, 'Doble', 80);
+ 
+INSERT INTO habitaciones (id, numero, tipo, precio) VALUES (6, 106, 'Suite', 150);
+ 
+-- Inserción de datos en la tabla reservas.
+ 
+INSERT INTO reservas (id, idCliente, idHabitacion, fecha_entrada, fecha_salida) VALUES (1, 1, 1, '2025-1063 01', '2025-10-05');
+ 
+INSERT INTO reservas (id, idCliente, idHabitacion, fecha_entrada, fecha_salida) VALUES (2, 2, 2, '2025-1003', '2025-10-06');
+ 
+INSERT INTO reservas (id, idCliente, idHabitacion, fecha_entrada, fecha_salida) VALUES (3, 3, 3, '2025-1002', '2025-10-04');
+ 
+INSERT INTO reservas (id, idCliente, idHabitacion, fecha_entrada, fecha_salida) VALUES (4, 4, 4, '2025-1005', '2025-10-10');
+ 
+INSERT INTO reservas (id, idCliente, idHabitacion, fecha_entrada, fecha_salida) VALUES (5, 5, 5, '2025-1007', '2025-10-12');
+ 
+INSERT INTO reservas (id, idCliente, idHabitacion, fecha_entrada, fecha_salida) VALUES (6, 6, 6, '2025-1001', '2025-10-03');
+ 
+-- Inserción de datos en la tabla pagos.
+ 
+INSERT INTO pagos (id, idReserva, metodoPago, precio, fechaPago) VALUES (1, 1, 'Tarjeta', 200, '2025-10-01');
+ 
+INSERT INTO pagos (id, idReserva, metodoPago, precio, fechaPago) VALUES (2, 2, 'Efectivo', 240, '2025-1064 03');
+ 
+INSERT INTO pagos (id, idReserva, metodoPago, precio, fechaPago) VALUES (3, 3, 'PayPal', 300, '2025-10-02');
+ 
+INSERT INTO pagos (id, idReserva, metodoPago, precio, fechaPago) VALUES (4, 4, 'Tarjeta', 400, '2025-10-05');
+ 
+INSERT INTO pagos (id, idReserva, metodoPago, precio, fechaPago) VALUES (5, 5, 'Efectivo', 320, '2025-1007');
+ 
+INSERT INTO pagos (id, idReserva, metodoPago, precio, fechaPago) VALUES (6, 6, 'PayPal', 150, '2025-10-01');
+
 ```
 - Comprobación de la creación de tablas e inserción de datos.
 ```bash
@@ -794,7 +979,8 @@ serjaii@db:~$ sudo apt update
 ```
 - Instalamos las siguientes dependencias.
 ```bash
-serjaii@db:~$ sudo apt install curl gnupg -y - curl: sirve para descargar archivos desde Internet. gnupg: permite manejar claves criptográficas como las claves GPG.
+serjaii@db:~$ sudo apt install curl gnupg -y - curl: sirve para descargar archivos desde Internet. 
+- **gnupg**: permite manejar claves criptográficas como las claves GPG.
 ```
 - Ejecutamos el siguiente comando para descargar la clave pública GPG oficial
 de MongoDB, y con “gpg --dearmor” la convertimos en formato binario para
@@ -983,7 +1169,9 @@ serjaii@db:~$ sudo apt update
 ```
 - Instalamos las dependencias y utilidades básicas para Neo4J.
 ```bash
-serjaii@db:~$ sudo apt install -y wget curl gnupg lsb-release ca-certificates apt-transport-https - wget/curl: descargar archivos desde internet. gnupg: manejar claves de seguridad (GPG). lsb-release: saber la versión del sistema. ca-certificates y apt-transport-https: permiten usar repositorios HTTPS de forma segura.
+serjaii@db:~$ sudo apt install -y wget curl gnupg lsb-release ca-certificates apt-transport-https - wget/
+- **curl**: descargar archivos desde internet. 
+- **gnupg**: manejar claves de seguridad (GPG). lsb-release: saber la versión del sistema. ca-certificates y apt-transport-https: permiten usar repositorios HTTPS de forma segura.
 ```
 - Neo4j necesita java para funcionar. En mi caso, voy a instalar Temurin Java 21,
 usando una versión mantenida por Adoptium.
@@ -2644,7 +2832,8 @@ serjaii@db:~$ sudo apt update && sudo apt upgrade -y
 - Instalamos las dependencias necesarias para la instalación de CouchDB, para
 poder añadir repositorios HTTPS y gestionar claves GPG.
 ```bash
-serjaii@db:~$ sudo apt install -y curl gnupg ca-certificates lsb-release apttransport-https - curl: para descargar la clave GPG. gnupg: para convertir la clave GPG a formato apt (dearmor). lsb-release: para obtener “VERSION_CODENAME”.
+serjaii@db:~$ sudo apt install -y curl gnupg ca-certificates lsb-release apttransport-https - curl: para descargar la clave GPG. 
+- **gnupg**: para convertir la clave GPG a formato apt (dearmor). lsb-release: para obtener “VERSION_CODENAME”.
 ```
 - Añadimos el repositorio oficial de CouchDB, donde se encuentran los paquetes
 oficiales de CouchDB. Además, añadimos también su clave GPG para que apt
