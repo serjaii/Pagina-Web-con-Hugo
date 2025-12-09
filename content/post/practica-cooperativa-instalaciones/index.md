@@ -27,16 +27,12 @@ serjaii@db:~$ sudo apt update && sudo apt upgrade -y
 serjaii@db:~$ sudo apt policy libaio1t64 libaio-dev unixodbc rlwrap alien net-tools unzip bc ksh
 ```
 - Usaje de cada dependencia
--
-
--
 
 - **libaio1t64**: dependencia de Entrada/Salida Asíncrona, obligatoria para
 Oracle.
 - **libaio-dev**: contiene los archivos de cabecera y enlaces simbólicos para
 que los desarrolladores puedan compilar programas que usen la librería
 libaio.
-
 - **unixodbc**: librerías ODBC necesarias para Oracle.
 - **rlwrap**: mejora la experiencia de SQL*Plus en terminal.
 - **bc**: cálculos usados por scripts de Oracle.
@@ -88,7 +84,13 @@ variables de entorno en el bashrc de nuestra máquina donde hemos instalado el
 servidor de Oracle.
 
 ```bash
-serjaii@db:~$ grep '^export' ~/.bashrc export ORACLE_HOME=/opt/oracle/product/21c/dbhome_1 export ORACLE_SID=ORCLCDB export ORACLE_BASE=/opt/oracle export LD_LIBRARY_PATH=$ORACLE_HOME/lib:$LD_LIBRARY_PATH export PATH=$ORACLE_HOME/bin:$PATH export NLS_LANG=SPANISH_SPAIN.AL32UTF8
+serjaii@db:~$ grep '^export' ~/.bashrc 
+export ORACLE_HOME=/opt/oracle/product/21c/dbhome_1 
+export ORACLE_SID=ORCLCDB 
+export ORACLE_BASE=/opt/oracle 
+export LD_LIBRARY_PATH=$ORACLE_HOME/lib:$LD_LIBRARY_PATH 
+export PATH=$ORACLE_HOME/bin:$PATH 
+export NLS_LANG=SPANISH_SPAIN.AL32UTF8
 serjaii@db:~$ alias alias sqlplus='rlwrap sqlplus'
 ```
 - Una vez añadida las variables de entorno, tendremos que recargar bashrc, para
@@ -127,13 +129,13 @@ serjaii@db:~$ sudo crontab -e
 el parámetro host del fichero listener.ora, para que escuche todas las peticiones
 incluidas las peticiones remotas o externas.
 ```bash
-serjaii@db:~$ sudo nano /opt/oracle/homes/OraDBHome21cEE/network/admin/li stener.ora
+serjaii@db:~$ sudo nano /opt/oracle/homes/OraDBHome21cEE/network/admin/listener.ora
 ```
 - También vamos a modificar el fichero tnsnames.ora, ya que es el que va a
 indicar al cliente como conectarse a Oracle. En este caso, vamos a modificar el
 valor “HOST” de “ORCLCDB”.
 ```bash
-serjaii@db:~$ sudo nano /opt/oracle/homes/OraDBHome21cEE/network/admin/t nsnames.ora
+serjaii@db:~$ sudo nano /opt/oracle/homes/OraDBHome21cEE/network/admin/tnsnames.ora
 ```
 - Reiniciamos la máquina para aplicar los cambios.
 ```bash
@@ -162,25 +164,25 @@ p7zip-full: descomprime los .zip de Oracle.
 - Al igual que en la instalación del servidor volveremos a crear el enlace
 simbólico para ayudar a Debian a reconocer el paquete.
 ```bash
-serjaii@db:~$ sudo ln -s /usr/lib/x86_64-linux-gnu/libaio.so.1t64 /usr/lib/x86_64linux-gnu/libaio.so.1
+serjaii@db:~$ sudo ln -s /usr/lib/x86_64-linux-gnu/libaio.so.1t64 /usr/lib/x86_64-linux-gnu/libaio.so.1
 ```
 - Creamos una carpeta que vamos a usar para trabajar con el cliente de Oracle.
 ```bash
-serjaii@db:~$ mkdir
-serjaii@db:~$ cd oracle oracle
+serjaii@db:~$ mkdir oracle
+serjaii@db:~$ cd oracle
 ```
 - Descargamos los paquetes para poder trabajar con el cliente de Oracle, que son
 Basic y SQL*Plus.
 ```bash
-serjaii@db:~$ wget https://download.oracle.com/otn_software/linux/instant client/2119000/instantclient-basic-linux.x6421.19.0.0.0dbru.zip
-serjaii@db:~$ wget https://download.oracle.com/otn_software/linux/instant client/2119000/instantclient-sqlplus-linux.x6421.19.0.0.0dbru.zip
+serjaii@db:~$ wget https://download.oracle.com/otn_software/linux/instantclient/2119000/instantclient-basic-linux.x64-21.19.0.0.0dbru.zip
+serjaii@db:~$ wget https://download.oracle.com/otn_software/linux/instantclient/2119000/instantclient-sqlplus-linux.x64-21.19.0.0.0dbru.zip
 ```
 - Comprobamos que se han descargado correctamente los paquetes y los
 descomprimimos.
 ```bash
 serjaii@db:~$ ls
-serjaii@db:~$ 7z x instantclient-basic-linux.x6421.19.0.0.0dbru.zip
-serjaii@db:~$ 7z x linux.x64-21.19.0.0.0dbru.zip instantclient-sqlplus-
+serjaii@db:~$ 7z x instantclient-basic-linux.x64-21.19.0.0.0dbru.zip
+serjaii@db:~$ 7z x instantclient-sqlplus-linux.x64-21.19.0.0.0dbru.zip
 ```
 - Añadimos las siguientes variables de entorno para que funcione correctamente
 el cliente de Oracle.
@@ -203,7 +205,8 @@ serjaii@db:~$ sqlplus dorante/dorante@//192.168.122.79:1521/ORCLCDB
 administrador para poder crear la base de datos.
 
 ```bash
-serjaii@db:~$ sqlplus / as sysdba SQL> ALTER SESSION SET "_ORACLE_SCRIPT"=true;
+serjaii@db:~$ sqlplus / as sysdba 
+SQL> ALTER SESSION SET "_ORACLE_SCRIPT"=true;
 ```
 - Creamos la base de datos y le damos los privilegios necesarios.
 ```bash
@@ -221,134 +224,46 @@ SQL
 
 >
 
-CREATE
-
-TABLE
-clientes(
-id
-INT,
-nombre
-VARCHAR(15)
-NOT
-NULL,
-apellidos
-VARCHAR(30)
-NOT
-NULL,
-email
-VARCHAR(50),
-telefono
-NUMBER(9),
+CREATE TABLE clientes(
+id INT,
+nombre VARCHAR(15) NOT NULL,
+apellidos VARCHAR(30) NOT NULL,
+email VARCHAR(50),
+telefono NUMBER(9),
 CONSTRAINT pk_idCliente PRIMARY KEY (id),
-
-CONSTRAINT
-
-uq_email
-
-UNIQUE
-
-(email)
-
+CONSTRAINT uq_email UNIQUE (email)
 );
 
-CREATE
-
-TABLE
-
-habitaciones(
-id
-INT,
-numero
-INT
-NOT
-NULL,
-tipo
-VARCHAR(20)
-NOT
-NULL,
-precio
-DECIMAL(10,2)
-NOT
-NULL,
+CREATE TABLE habitaciones(
+id INT,
+numero INT NOT NULL,
+tipo VARCHAR(20) NOT NULL,
+precio DECIMAL(10,2) NOT NULL,
 CONSTRAINT pk_idHabitacion PRIMARY KEY (id),
 CONSTRAINT uq_numero UNIQUE (numero),
-CONSTRAINT ck_tipoHabitacion CHECK (tipo IN
-('Individual',
-'Doble',
-'Suite',
-'Familiar'))
+CONSTRAINT ck_tipoHabitacion CHECK (tipo IN ('Individual', 'Doble', 'Suite', 'Familiar'))
 );
 
-CREATE
-
-TABLE
-
-reservas(
-id
-INT,
-idCliente
-INT
-NOT
-NULL,
-idHabitacion
-INT
-NOT
-NULL,
-fecha_entrada
-DATE
-NOT
-NULL,
-fecha_salida
-DATE
-NOT
-NULL,
+CREATE TABLE reservas(
+id INT,
+idCliente INT NOT NULL,
+idHabitacion INT NOT NULL,
+fecha_entrada DATE NOT NULL,
+fecha_salida DATE NOT NULL,
 CONSTRAINT pk_idReservas PRIMARY KEY (id),
-CONSTRAINT fk_idCliente FOREIGN KEY (idCliente)
-REFERENCES
-clientes(id),
-CONSTRAINT fk_idHabitacion FOREIGN KEY
-(idHabitacion)
-REFERENCES
-habitaciones(id)
+CONSTRAINT fk_idCliente FOREIGN KEY (idCliente) REFERENCES clientes(id),
+CONSTRAINT fk_idHabitacion FOREIGN KEY (idHabitacion) REFERENCES habitaciones(id)
 );
 
-CREATE
-
-TABLE
-id
-idReserva
-INT
-NOT
-metodoPago
-VARCHAR(20)
-NOT
-precio
-DECIMAL(10,2)
-NOT
-
-pagos(
-INT,
-NULL,
-NULL,
-NULL,
-
-fechaPago
-DATE
-NOT
-NULL,
+CREATE TABLE pagos(
+id INT,
+idReserva INT NOT NULL,
+metodoPago VARCHAR(20) NOT NULL,
+precio DECIMAL(10,2) NOT NULL,
+fechaPago DATE NOT NULL,
 CONSTRAINT pk_idPagos PRIMARY KEY (id),
-CONSTRAINT
-fk_idReserva
-FOREIGN
-KEY
-(idReserva)
-REFERENCES
-reservas(id),
-CONSTRAINT ck_metodoPago CHECK (metodoPago
-IN
-('Tarjeta',
-'Efectivo',
-'PayPal'))
+CONSTRAINT fk_idReserva FOREIGN KEY (idReserva) REFERENCES reservas(id),
+CONSTRAINT ck_metodoPago CHECK (metodoPago IN ('Tarjeta','Efectivo','PayPal'))
 );
 
 - Introducimos datos a la base de datos que acabamos de crear.
@@ -572,7 +487,7 @@ defecto, PostgreSQL suele permitir la conexión de 100 dispositivos.
 - Modificamos el fichero “/etc/postgresql/17/main/pg_hba.conf”, agregando la
 siguiente línea final, para configurar permisos y permitir conexiones remotas.
 ```bash
-sudo nano /etc/postgresql/17/main/pg_hba.conf
+serjaii@db:~$ sudo nano /etc/postgresql/17/main/pg_hba.conf
 ```
 - Reiniciamos el servicio de postgresql, ejecutando el siguiente comando.
 ```bash
@@ -591,11 +506,7 @@ postgres=# CREATE DATABASE prueba_db;
 ```
 - Creamos un usuario con contraseña.
 ```bash
-postgres=# CREATE ROLE
-PASSWORD 'dorante';
-dorante
-WITH
-LOGIN
+postgres=# CREATE ROLE dorante WITH LOGIN PASSWORD 'dorante';
 ```
 - Le damos los privilegios que consideremos necesarios. En mi caso le voy a dar
 todos los privilegios.
@@ -1136,7 +1047,10 @@ MongoDB.
 - Nos conectamos al servidor desde su propia máquina y creamos la base de
 datos y el usuario con el que vamos a acceder a la base de datos remotamente.
 ```bash
-serjaii@db:~$ mongosh test> use hotel hotel> db.createUser({ user: "david", pwd: "david", roles: [{ role: "readWrite", db: "hotel" }] }) { ok: 1 }
+serjaii@db:~$ mongosh 
+test> use hotel 
+hotel> db.createUser({ user: "david", pwd: "david", roles: [{ role: "readWrite", db: "hotel" }] }) 
+{ ok: 1 }
 ```
 - Volvemos a activar la autenticación en “/etc/mongod.conf”.
 
@@ -1147,7 +1061,45 @@ serjaii@db:~$ sudo systemctl restart mongod
 datos.
 
 ```bash
-serjaii@db:~$ mongosh "mongodb://usuario:contraseña@IP_DEL_SERVIDOR:2 7017/pruebadb?authSource=pruebadb" Creación de la colección clientes e inserción de datos. db.clientes.insertMany([ {_id:1, nombre:"David", apellido1:"Dorado", apellido2:"Lopez", email:"davidd@gmail.com", telefono:600111222}, {_id:2, nombre:"Maria", apellido1:"Gomez", apellido2:"Perez", email:"mariagom@gmail.com", telefono:600333444}, {_id:3, nombre:"Jorge", apellido1:"Santos", apellido2:"Diaz", email:"jorgesantos@gmail.com", telefono:600555666}, {_id:4, nombre:"Lucia", apellido1:"Romero", apellido2:"Garcia", email:"luciarom@yahoo.es", telefono:600777888}, {_id:5, nombre:"Pablo", apellido1:"Ruiz", apellido2:"Torres", email:"pablo@gmail.com", telefono:600999000}, {_id:6, nombre:"Sofia", apellido1:"Martinez", apellido2:"Leon", email:"sofleon@yahoo.es", telefono:601111222}, {_id:7, nombre:"Alberto", apellido1:"Navas", apellido2:"Cruz", email:"albertonavas@yahoo.es", telefono:601333444}, {_id:8, nombre:"Marta", apellido1:"Lopez", apellido2:"Gil", email:"marta@gmail.com", telefono:601555666}, {_id:9, nombre:"Raul", apellido1:"Castro", apellido2:"Vega", email:"raulcastro@gmail.com", telefono:601777888}, {_id:10, nombre:"Laura", apellido1:"Morales", apellido2:"Cano", email:"laura@gmail.com", telefono:601999000}, ]); Creación de la colección habitaciones e inserción de datos. db.habitaciones.insertMany([ {_id:1, numero:101, tipo:"Individual", precio:50}, {_id:2, numero:102, tipo:"Doble", precio:80}, {_id:3, numero:103, tipo:"Suite", precio:150}, {_id:4, numero:104, tipo:"Individual", precio:50}, {_id:5, numero:105, tipo:"Doble", precio:80}, {_id:6, numero:106, tipo:"Suite", precio:150} ]); Creación de la colección servicios e inserción de datos. db.servicios.insertMany([ { _id:1, servicio:"Desayuno", precio:5 }, { _id:2, servicio:"Spa", precio:20 }, { _id:3, servicio:"Gimnasio", precio:0 }, { _id:4, servicio:"Piscina cubierta", precio:0 }, { _id:5, servicio:"Aparcamiento", precio:10 }, { _id:6, servicio:"Limpieza extra", precio:15 }, { _id:7, servicio:"Wi-Fi Premium", precio:3 }, { _id:8, servicio:"Transporte aeropuerto", precio:25 }, { _id:9, servicio:"Cuna para bebé", precio:5 }, { _id:10, servicio:"Late check-out", precio:12 }, ]);
+serjaii@db:~$ mongosh "mongodb://usuario:contraseña@IP_DEL_SERVIDOR:27017/pruebadb?authSource=pruebadb"
+
+// Creación de la colección clientes e inserción de datos.
+db.clientes.insertMany([ 
+{_id:1, nombre:"David", apellido1:"Dorado", apellido2:"Lopez", email:"davidd@gmail.com", telefono:600111222}, 
+{_id:2, nombre:"Maria", apellido1:"Gomez", apellido2:"Perez", email:"mariagom@gmail.com", telefono:600333444}, 
+{_id:3, nombre:"Jorge", apellido1:"Santos", apellido2:"Diaz", email:"jorgesantos@gmail.com", telefono:600555666}, 
+{_id:4, nombre:"Lucia", apellido1:"Romero", apellido2:"Garcia", email:"luciarom@yahoo.es", telefono:600777888}, 
+{_id:5, nombre:"Pablo", apellido1:"Ruiz", apellido2:"Torres", email:"pablo@gmail.com", telefono:600999000}, 
+{_id:6, nombre:"Sofia", apellido1:"Martinez", apellido2:"Leon", email:"sofleon@yahoo.es", telefono:601111222}, 
+{_id:7, nombre:"Alberto", apellido1:"Navas", apellido2:"Cruz", email:"albertonavas@yahoo.es", telefono:601333444}, 
+{_id:8, nombre:"Marta", apellido1:"Lopez", apellido2:"Gil", email:"marta@gmail.com", telefono:601555666}, 
+{_id:9, nombre:"Raul", apellido1:"Castro", apellido2:"Vega", email:"raulcastro@gmail.com", telefono:601777888}, 
+{_id:10, nombre:"Laura", apellido1:"Morales", apellido2:"Cano", email:"laura@gmail.com", telefono:601999000}
+]); 
+
+// Creación de la colección habitaciones e inserción de datos.
+db.habitaciones.insertMany([ 
+{_id:1, numero:101, tipo:"Individual", precio:50}, 
+{_id:2, numero:102, tipo:"Doble", precio:80}, 
+{_id:3, numero:103, tipo:"Suite", precio:150}, 
+{_id:4, numero:104, tipo:"Individual", precio:50}, 
+{_id:5, numero:105, tipo:"Doble", precio:80}, 
+{_id:6, numero:106, tipo:"Suite", precio:150} 
+]); 
+
+// Creación de la colección servicios e inserción de datos. 
+db.servicios.insertMany([ 
+{ _id:1, servicio:"Desayuno", precio:5 }, 
+{ _id:2, servicio:"Spa", precio:20 }, 
+{ _id:3, servicio:"Gimnasio", precio:0 }, 
+{ _id:4, servicio:"Piscina cubierta", precio:0 }, 
+{ _id:5, servicio:"Aparcamiento", precio:10 }, 
+{ _id:6, servicio:"Limpieza extra", precio:15 }, 
+{ _id:7, servicio:"Wi-Fi Premium", precio:3 }, 
+{ _id:8, servicio:"Transporte aeropuerto", precio:25 }, 
+{ _id:9, servicio:"Cuna para bebé", precio:5 }, 
+{ _id:10, servicio:"Late check-out", precio:12 }
+]);
 ```
 - Comprobamos que se han creado las colecciones con los datos correctamente.
 Colección clientes.
@@ -1169,9 +1121,13 @@ serjaii@db:~$ sudo apt update
 ```
 - Instalamos las dependencias y utilidades básicas para Neo4J.
 ```bash
-serjaii@db:~$ sudo apt install -y wget curl gnupg lsb-release ca-certificates apt-transport-https - wget/
+serjaii@db:~$ sudo apt install -y wget curl gnupg lsb-release ca-certificates apt-transport-https 
+```
+- **wget**: para descargar archivos desde internet.
 - **curl**: descargar archivos desde internet. 
-- **gnupg**: manejar claves de seguridad (GPG). lsb-release: saber la versión del sistema. ca-certificates y apt-transport-https: permiten usar repositorios HTTPS de forma segura.
+- **gnupg**: manejar claves de seguridad (GPG). 
+- **lsb-release**: saber la versión del sistema. 
+- **ca-certificates y apt-transport-https**: permiten usar repositorios HTTPS de forma segura.
 ```
 - Neo4j necesita java para funcionar. En mi caso, voy a instalar Temurin Java 21,
 usando una versión mantenida por Adoptium.
@@ -1183,7 +1139,7 @@ confiar en los paquetes de Adoptium.
 - Añadimos el repositorio de Adoptium desde donde apt puede descargar los
 paquetes Temurin (Java 21).
 ```bash
-serjaii@db:~$ echo [signed-by=/etc/apt/trusted.gpg.d/adoptium.gpg] https://packages.adoptium.net/artifactory/deb (lsb_release -cs) main" | sudo /etc/apt/sources.list.d/adoptium.list "deb $ tee
+serjaii@db:~$ echo "deb [signed-by=/etc/apt/trusted.gpg.d/adoptium.gpg] https://packages.adoptium.net/artifactory/deb $(lsb_release -cs) main" | sudo tee /etc/apt/sources.list.d/adoptium.list
 ```
 - Volvemos a actualizar los repositorios antes de instalar java 21.
 ```bash
@@ -1308,158 +1264,61 @@ tampoco tiene las opciones de darle privilegios a los usuarios, sino que durante
 la creación del usuario, el usuario tiene todos los permisos por defecto, como si
 fuera admin.
 ```bash
-serjaii@db:~$ cypher-shell bolt://192.168.122.79:7687 -u neo4j -p 'root1234' neo4j@neo4j> PASSWORD REQUIRED; -a CREATE USER nombreUsuario SET 'contraseñaUsuario' CHANGE NOT
+serjaii@db:~$ cypher-shell bolt://192.168.122.79:7687 -u neo4j -p 'root1234' 
+neo4j@neo4j> :use system
+neo4j@neo4j> CREATE USER nombreUsuario SET PASSWORD 'contraseñaUsuario' CHANGE NOT REQUIRED;
 ```
 Con la opción “CHANGE NOT REQUIRED”, hemos indicado que no necesita
 cambiar la contraseña en su primer inicio de sesión.
 - Creamos los nodos correspondientes con sus datos.
 Creación de clientes.
 ```bash
-CREATE (:Cliente {id: 1, nombre: "David", apellido1:
-"Dorado",
-apellido2:
-"Lopez",
-email:
-"davidd@gmail.com",
-telefono:
-600111222});
-CREATE (:Cliente {id: 2, nombre: "Maria", apellido1:
-"Dorado",
-apellido2:
-"Lopez",
-email:
-"davidd@gmail.com",
-telefono:
-600333444});
-CREATE (:Cliente {id: 3, nombre: "Jorge", apellido1:
-"Santos",
-apellido2:
-"Diaz",
-email:
-"jorgesantos@gmail.com",
-telefono:
-600555666});
-CREATE (:Cliente {id: 4, nombre: "Lucia", apellido1:
-"Romero",
-apellido2:
-"Garcia",
-email:
-"luciarom@yahoot.es",
-telefono:
-600777888});
-CREATE (:Cliente {id: 5, nombre: "Pablo", apellido1:
-"Ruiz", apellido2: "Torres", email: "pablo@gmail.com",
-telefono:
-600999000});
-CREATE (:Cliente {id: 6, nombre: "Sofia", apellido1:
-"Martinez",
-apellido2:
-"Leon",
-email:
-"sofleon@yahoot.es",
-telefono:
-601111222});
-CREATE (:Cliente {id: 7, nombre: "Roberto", apellido1:
-"Navas",
-apellido2:
-"Cruz",
-email:
-"albertonavas@yahoot.es",
-telefono:
-601333444});
-CREATE (:Cliente {id: 8, nombre: "Marta", apellido1:
-"Lopez", apellido2: "Gil", email: "marta@gmail.com",
-telefono:
-601555666});
-CREATE (:Cliente {id: 9, nombre: "Raul", apellido1:
-"Castro",
-apellido2:
-"Vega",
-email:
-"raulcastro@gmail.com",
-telefono:
-601777888});
-CREATE (:Cliente {id: 10, nombre: "laura", apellido1:
-"Morales",
-apellido2:
-"Cano",
-email:
-"laura@gmail.com", telefono: 601999000});
-Creación de habitaciones.
-CREATE (:Habitacion {id: 1, numero: 101,
-"Individual"});
-CREATE (:Habitacion {id: 2, numero: 102,
-"Doble"});
-CREATE (:Habitacion {id: 3, numero: 103,
-"Suite"});
-CREATE (:Habitacion {id: 4, numero: 104,
-"Individual"});
-CREATE (:Habitacion {id: 5, numero: 105,
-"Doble"});
-CREATE (:Habitacion {id: 6, numero: 106,
-tipo:
-tipo:
-tipo:
-tipo:
-tipo:
-tipo:
-"Suite"});
-CREATE (:Habitacion {id: 7, numero:
-"Individual"});
-CREATE (:Habitacion {id: 8, numero:
-"Doble"});
-CREATE (:Habitacion {id: 9, numero:
-"Suite"});
-CREATE (:Habitacion {id: 10, numero:
-"Doble"});
-107,
-tipo:
-108,
-tipo:
-109,
-tipo:
-110, tipo:
-Creación de servicios.
-CREATE (:Servicio {id: 1, nombre: "Restaurante", precio:
-15});
-CREATE (:Servicio {id: 2, nombre: "Piscina", precio:
-5});
+CREATE (:Cliente {id: 1, nombre: "David", apellido1: "Dorado", apellido2: "Lopez", email: "davidd@gmail.com", telefono: 600111222});
+CREATE (:Cliente {id: 2, nombre: "Maria", apellido1: "Gomez", apellido2: "Perez", email: "mariagom@gmail.com", telefono: 600333444});
+CREATE (:Cliente {id: 3, nombre: "Jorge", apellido1: "Santos", apellido2: "Diaz", email: "jorgesantos@gmail.com", telefono: 600555666});
+CREATE (:Cliente {id: 4, nombre: "Lucia", apellido1: "Romero", apellido2: "Garcia", email: "luciarom@yahoot.es", telefono: 600777888});
+CREATE (:Cliente {id: 5, nombre: "Pablo", apellido1: "Ruiz", apellido2: "Torres", email: "pablo@gmail.com", telefono: 600999000});
+CREATE (:Cliente {id: 6, nombre: "Sofia", apellido1: "Martinez", apellido2: "Leon", email: "sofleon@yahoot.es", telefono: 601111222});
+CREATE (:Cliente {id: 7, nombre: "Roberto", apellido1: "Navas", apellido2: "Cruz", email: "albertonavas@yahoot.es", telefono: 601333444});
+CREATE (:Cliente {id: 8, nombre: "Marta", apellido1: "Lopez", apellido2: "Gil", email: "marta@gmail.com", telefono: 601555666});
+CREATE (:Cliente {id: 9, nombre: "Raul", apellido1: "Castro", apellido2: "Vega", email: "raulcastro@gmail.com", telefono: 601777888});
+CREATE (:Cliente {id: 10, nombre: "laura", apellido1: "Morales", apellido2: "Cano", email: "laura@gmail.com", telefono: 601999000});
+
+// Creación de habitaciones.
+CREATE (:Habitacion {id: 1, numero: 101, tipo: "Individual"});
+CREATE (:Habitacion {id: 2, numero: 102, tipo: "Doble"});
+CREATE (:Habitacion {id: 3, numero: 103, tipo: "Suite"});
+CREATE (:Habitacion {id: 4, numero: 104, tipo: "Individual"});
+CREATE (:Habitacion {id: 5, numero: 105, tipo: "Doble"});
+CREATE (:Habitacion {id: 6, numero: 106, tipo: "Suite"});
+CREATE (:Habitacion {id: 7, numero: 107, tipo: "Individual"});
+CREATE (:Habitacion {id: 8, numero: 108, tipo: "Doble"});
+CREATE (:Habitacion {id: 9, numero: 109, tipo: "Suite"});
+CREATE (:Habitacion {id: 10, numero: 110, tipo: "Doble"});
+
+// Creación de servicios.
+CREATE (:Servicio {id: 1, nombre: "Restaurante", precio: 15});
+CREATE (:Servicio {id: 2, nombre: "Piscina", precio: 5});
 CREATE (:Servicio {id: 3, nombre: "Spa", precio: 25});
-CREATE (:Servicio {id: 4, nombre: "Gimnasio", precio:
-10});
-CREATE (:Servicio {id: 5, nombre: "Parking", precio:
-8});
-CREATE (:Servicio {id: 6, nombre: "Transporte",
-precio:
-12});
-CREATE (:Servicio {id: 7, nombre: "WiFi Premium",
-precio:
-3});
-CREATE (:Servicio {id: 8, nombre: "Canguro", precio:
-20});
-CREATE (:Servicio {id: 9, nombre: "Excursión", precio:
-30});
-CREATE (:Servicio {id: 10, nombre: "Alquiler
-Bicicleta", precio: 7});
-Creación de Pagos.
+CREATE (:Servicio {id: 4, nombre: "Gimnasio", precio: 10});
+CREATE (:Servicio {id: 5, nombre: "Parking", precio: 8});
+CREATE (:Servicio {id: 6, nombre: "Transporte", precio: 12});
+CREATE (:Servicio {id: 7, nombre: "WiFi Premium", precio: 3});
+CREATE (:Servicio {id: 8, nombre: "Canguro", precio: 20});
+CREATE (:Servicio {id: 9, nombre: "Excursión", precio: 30});
+CREATE (:Servicio {id: 10, nombre: "Alquiler Bicicleta", precio: 7});
+
+// Creación de Pagos.
 CREATE (:Pagos {id: 1, monto: 100, metodo: "Tarjeta"});
-CREATE (:Pagos {id: 2, monto: 200, metodo:
-"Efectivo"});
-CREATE (:Pagos {id: 3, monto: 150, metodo:
-"Transferencia"});
-CREATE (:Pagos {id: 4, monto: 120, metodo:
-"Tarjeta"});
-CREATE (:Pagos {id: 5, monto: 250, metodo:
-"Efectivo"});
-CREATE (:Pagos {id: 6, monto: 180, metodo:
-"Tarjeta"});
-CREATE (:Pagos {id: 7, monto: 90, metodo:
-"Transferencia"});
-CREATE (:Pagos {id: 8, monto: 300, metodo:
-"Efectivo"});
+CREATE (:Pagos {id: 2, monto: 200, metodo: "Efectivo"});
+CREATE (:Pagos {id: 3, monto: 150, metodo: "Transferencia"});
+CREATE (:Pagos {id: 4, monto: 120, metodo: "Tarjeta"});
+CREATE (:Pagos {id: 5, monto: 250, metodo: "Efectivo"});
+CREATE (:Pagos {id: 6, monto: 180, metodo: "Tarjeta"});
+CREATE (:Pagos {id: 7, monto: 90, metodo: "Transferencia"});
+CREATE (:Pagos {id: 8, monto: 300, metodo: "Efectivo"});
 CREATE (:Pagos {id: 9, monto: 50, metodo: "Tarjeta"});
-CREATE (:Pagos {id: 10, monto: 75, metodo:
-"Efectivo"});
+CREATE (:Pagos {id: 10, monto: 75, metodo: "Efectivo"});
 ```
 - Creamos las relaciones entre los nodos que hemos creado antes.
 Cliente reserva Habitación.
@@ -1539,144 +1398,29 @@ CREATE
 MATCH (c:Cliente {id:10}), (h:Habitacion {id:10})
 ```bash
 CREATE (c)-[:Reserva]->(h);
-Cliente utiliza Servicio.
-MATCH
-(c:Cliente
-CREATE
-{id:1}),
-(s:Servicio
-{id:1})
-(c)-[:USA]->(s);
-MATCH
-CREATE
-(c:Cliente
-{id:2}),
-(s:Servicio
-{id:4})
-(c)-[:USA]->(s);
-MATCH
-CREATE
-(c:Cliente
-{id:3}),
-(s:Servicio
-{id:5})
-(c)-[:USA]->(s);
-MATCH
-CREATE
-(c:Cliente
-{id:4}),
-(s:Servicio
-{id:2})
-(c)-[:USA]->(s);
-MATCH
-(c:Cliente
-{id:5}),
-(s:Servicio
-{id:3})
-CREATE
-(c)-[:USA]->(s);
-MATCH
-CREATE
-(c:Cliente
-{id:6}),
-(s:Servicio
-{id:8})
-(c)-[:USA]->(s);
-MATCH
-CREATE
-(c:Cliente
-{id:7}),
-(s:Servicio
-{id:6})
-(c)-[:USA]->(s);
-MATCH
-CREATE
-(c:Cliente
-{id:8}),
-(s:Servicio
-{id:7})
-(c)-[:USA]->(s);
-MATCH
-CREATE
-(c:Cliente
-{id:9}),
-(s:Servicio
-{id:9})
-(c)-[:USA]->(s);
-MATCH (c:Cliente {id:10}),
-CREATE (c)-[:USA]->(s);
-(s:Servicio
-{id:10})
-Cliente realiza Pago.
-MATCH
-(c:Cliente
-CREATE
-{id:1}),
-(p:Pagos
-{id:1})
-(c)-[:PAGA]->(p);
-MATCH
-CREATE
-(c:Cliente
-{id:2}),
-(p:Pagos
-{id:2})
-(c)-[:PAGA]->(p);
-MATCH
-CREATE
-(c:Cliente
-{id:3}),
-(p:Pagos
-{id:3})
-(c)-[:PAGA]->(p);
-MATCH
-CREATE
-(c:Cliente
-{id:4}),
-(p:Pagos
-{id:4})
-(c)-[:PAGA]->(p);
-MATCH
-(c:Cliente
-{id:5}),
-(p:Pagos
-{id:5})
-CREATE
-(c)-[:PAGA]->(p);
-MATCH
-CREATE
-(c:Cliente
-{id:6}),
-(p:Pagos
-{id:6})
-(c)-[:PAGA]->(p);
-MATCH
-CREATE
-(c:Cliente
-{id:7}),
-(p:Pagos
-{id:7})
-(c)-[:PAGA]->(p);
-MATCH
-CREATE
-(c:Cliente
-{id:8}),
-(p:Pagos
-{id:8})
-(c)-[:PAGA]->(p);
-MATCH
-CREATE
-(c:Cliente
-{id:9}),
-(p:Pagos
-{id:9})
-(c)-[:PAGA]->(p);
-MATCH
-(c:Cliente
-{id:10}),
-CREATE (c)-[:PAGA]->(p);
-(p:Pagos
-{id:10})
+// Cliente utiliza Servicio.
+MATCH (c:Cliente {id:1}),(s:Servicio{id:1}) CREATE (c)-[:USA]->(s);
+MATCH (c:Cliente {id:2}),(s:Servicio{id:4}) CREATE (c)-[:USA]->(s);
+MATCH (c:Cliente {id:3}),(s:Servicio{id:5}) CREATE (c)-[:USA]->(s);
+MATCH (c:Cliente {id:4}),(s:Servicio{id:2}) CREATE (c)-[:USA]->(s);
+MATCH (c:Cliente {id:5}),(s:Servicio{id:3}) CREATE (c)-[:USA]->(s);
+MATCH (c:Cliente {id:6}),(s:Servicio{id:8}) CREATE (c)-[:USA]->(s);
+MATCH (c:Cliente {id:7}),(s:Servicio{id:6}) CREATE (c)-[:USA]->(s);
+MATCH (c:Cliente {id:8}),(s:Servicio{id:7}) CREATE (c)-[:USA]->(s);
+MATCH (c:Cliente {id:9}),(s:Servicio{id:9}) CREATE (c)-[:USA]->(s);
+MATCH (c:Cliente {id:10}),(s:Servicio{id:10}) CREATE (c)-[:USA]->(s);
+
+// Cliente realiza Pago.
+MATCH (c:Cliente {id:1}),(p:Pagos{id:1}) CREATE (c)-[:PAGA]->(p);
+MATCH (c:Cliente {id:2}),(p:Pagos{id:2}) CREATE (c)-[:PAGA]->(p);
+MATCH (c:Cliente {id:3}),(p:Pagos{id:3}) CREATE (c)-[:PAGA]->(p);
+MATCH (c:Cliente {id:4}),(p:Pagos{id:4}) CREATE (c)-[:PAGA]->(p);
+MATCH (c:Cliente {id:5}),(p:Pagos{id:5}) CREATE (c)-[:PAGA]->(p);
+MATCH (c:Cliente {id:6}),(p:Pagos{id:6}) CREATE (c)-[:PAGA]->(p);
+MATCH (c:Cliente {id:7}),(p:Pagos{id:7}) CREATE (c)-[:PAGA]->(p);
+MATCH (c:Cliente {id:8}),(p:Pagos{id:8}) CREATE (c)-[:PAGA]->(p);
+MATCH (c:Cliente {id:9}),(p:Pagos{id:9}) CREATE (c)-[:PAGA]->(p);
+MATCH (c:Cliente {id:10}),(p:Pagos{id:10}) CREATE (c)-[:PAGA]->(p);
 ```
 
 ### 6.Pruebas del funcionamiento básico de Neo4j.
@@ -1853,74 +1597,41 @@ añadiremos una password para el acceso remoto
 ### 4.Configuración del cliente Redis-cli para acceso remoto
 - En primer lugar actualizamos los paquetes del sistema
 
-serjaii ~ 10:57 : sudo apt update
-Obj:1 https://apt.releases.hashicorp.com trixie InRelease
-Obj:2 http://deb.debian.org/debian trixie InRelease
-Obj:3 http://security.debian.org/debian-security trixiesecurity InRelease
-Obj:4 http://deb.debian.org/debian trixie-updates InRelease
-Obj:5 https://dl.google.com/linux/chrome/deb stable
-InRelease
-Obj:6 https://packages.microsoft.com/repos/code stable
-InRelease
-Todos los paquetes están actualizados.
-
-- E instalamos el paquete de redis-tools el cual incluye el cliente redis
-serjaii ~ 10:57 sudo apt install redis-tools
+serjaii@db:~$ sudo apt update
+serjaii@db:~$ sudo apt install redis-tools
 
 - Comprobamos que podemos acceder remotamente
 
-serjaii ~ 10:57 redis-cli -h bd -p 6379 -a clienteredis
+serjaii@db:~$ redis-cli -h bd -p 6379 -a clienteredis
 
 ### 5.Creación de usuario,base de datos e inserción de datos
 - Ingresamos a la base de datos y creamos el usuario
-serjaii ~ 18:37 redis
+serjaii@db:~$ redis-cli
 bd:6379> ACL SETUSER serjaii on >serjaii ~* +@all
 OK
 bd:6379>
 
 - Accedemos con el nuevo usuario
-serjaii ~ 19:01 redis-cli -h bd -p 6379 -a serjaii --user serjaii
+serjaii@db:~$ redis-cli -h bd -p 6379 -a serjaii --user serjaii
 Warning: Using a password with '-a' or '-u' option on the
 command line interface may not be safe.
 bd:6379>
 - Redis no trabaja con bases de datos ni tablas sino grafos y nodos,crearemos un
 grafo de ejemplo e insertaremos datos
--Clientes:
-HSET cliente:1 id 1 nombre "David" apellido1 "Dorado"
-apellido2 "Lopez" email "davidd@gmail.com" telefono
+- Clientes:
+HSET cliente:1 id 1 nombre "David" apellido1 "Dorado" apellido2 "Lopez" email "davidd@gmail.com" telefono "600111222"
+HSET cliente:2 id 2 nombre "Maria" apellido1 "Dorado" apellido2 "Lopez" email "maria@gmail.com" telefono "600333444"
+HSET cliente:3 id 3 nombre "Jorge" apellido1 "Santos" apellido2 "Diaz" email "jorgesantos@gmail.com" telefono "600555666"
+HSET cliente:4 id 4 nombre "Lucia" apellido1 "Romero" apellido2 "Garcia" email "luciarom@yahoot.es" telefono "600777888"
+HSET cliente:5 id 5 nombre "Pablo" apellido1 "Ruiz" apellido2 "Torres" email "pablo@gmail.com" telefono "600999000"
+HSET cliente:6 id 6 nombre "Sofia" apellido1 "Martinez" apellido2 "Leon" email "sofleon@yahoot.es" telefono "601111222"
+HSET cliente:7 id 7 nombre "Roberto" apellido1 "Navas" apellido2 "Cruz" email "albertonavas@yahoot.es" telefono "601333444"
+HSET cliente:8 id 8 nombre "Marta" apellido1 "Lopez" apellido2 "Gil" email "marta@gmail.com" telefono "601555666"
+HSET cliente:9 id 9 nombre "Raul" apellido1 "Castro" apellido2 "Vega" email "raulcastro@gmail.com" telefono "601777888"
+HSET cliente:10 id 10 nombre "Laura" apellido1 "Morales" apellido2 "Cano" email "laura@gmail.com" telefono "601999000"
 
-"600111222"
-HSET cliente:2 id 2 nombre "Maria" apellido1 "Dorado"
-apellido2 "Lopez" email "maria@gmail.com" telefono
-"600333444"
-HSET cliente:3 id 3 nombre "Jorge" apellido1 "Santos"
-apellido2 "Diaz" email "jorgesantos@gmail.com" telefono
-"600555666"
-HSET cliente:4 id 4 nombre "Lucia" apellido1 "Romero"
-apellido2 "Garcia" email "luciarom@yahoot.es" telefono
-"600777888"
-HSET cliente:5 id 5 nombre "Pablo" apellido1 "Ruiz"
-apellido2 "Torres" email "pablo@gmail.com" telefono
-"600999000"
-HSET cliente:6 id 6 nombre "Sofia" apellido1 "Martinez"
-apellido2 "Leon" email "sofleon@yahoot.es" telefono
-"601111222"
-HSET cliente:7 id 7 nombre "Roberto" apellido1 "Navas"
-apellido2 "Cruz" email "albertonavas@yahoot.es" telefono
-"601333444"
-HSET cliente:8 id 8 nombre "Marta" apellido1 "Lopez"
-apellido2 "Gil" email "marta@gmail.com" telefono
-"601555666"
-HSET cliente:9 id 9 nombre "Raul" apellido1 "Castro"
-apellido2 "Vega" email "raulcastro@gmail.com" telefono
-"601777888"
-HSET cliente:10 id 10 nombre "Laura" apellido1 "Morales"
-apellido2 "Cano" email "laura@gmail.com" telefono
-"601999000"
-
--Habitacion:
+- Habitacion:
 HSET habitacion:1 id 1 numero 101 tipo "Individual"
-
 HSET habitacion:2 id 2 numero 102 tipo "Doble"
 HSET habitacion:3 id 3 numero 103 tipo "Suite"
 HSET habitacion:4 id 4 numero 104 tipo "Individual"
@@ -1931,20 +1642,19 @@ HSET habitacion:8 id 8 numero 108 tipo "Doble"
 HSET habitacion:9 id 9 numero 109 tipo "Suite"
 HSET habitacion:10 id 10 numero 110 tipo "Doble"
 
--Servicio
+- Servicio:
 HSET servicio:1 id 1 nombre "Restaurante" precio 15
 HSET servicio:2 id 2 nombre "Piscina" precio 5
 HSET servicio:3 id 3 nombre "Spa" precio 25
 HSET servicio:4 id 4 nombre "Gimnasio" precio 10
 HSET servicio:5 id 5 nombre "Parking" precio 8
-
 HSET servicio:6 id 6 nombre "Transporte" precio 12
 HSET servicio:7 id 7 nombre "WiFi Premium" precio 3
 HSET servicio:8 id 8 nombre "Canguro" precio 20
 HSET servicio:9 id 9 nombre "Excursión" precio 30
 HSET servicio:10 id 10 nombre "Alquiler Bicicleta" precio 7
 
--Pago:
+- Pago:
 HSET pago:1 id 1 monto 100 metodo "Tarjeta"
 HSET pago:2 id 2 monto 200 metodo "Efectivo"
 HSET pago:3 id 3 monto 150 metodo "Transferencia"
@@ -1954,7 +1664,6 @@ HSET pago:6 id 6 monto 180 metodo "Tarjeta"
 HSET pago:7 id 7 monto 90 metodo "Transferencia"
 HSET pago:8 id 8 monto 300 metodo "Efectivo"
 HSET pago:9 id 9 monto 50 metodo "Tarjeta"
-
 HSET pago:10 id 10 monto 75 metodo "Efectivo"
 
 ### 6.Pruebas de funcionamiento
@@ -1984,13 +1693,12 @@ sudo apt install -y wget apt-transport-https gpg
 ```
 - Añadir la clave GPG del repositorio de Adoptium
 ```bash
-wget -qO - https://packages.adoptium.net/artifactory/api/gpg/key/public
-| sudo gpg --dearmor -o /usr/share/keyrings/adoptium.gpg
+serjaii@db:~$ wget -qO - https://packages.adoptium.net/artifactory/api/gpg/key/public | sudo gpg --dearmor -o /usr/share/keyrings/adoptium.gpg
 ```
 - Añadir el repositorio
-echo "deb [signed-by=/usr/share/keyrings/adoptium.gpg]
-https://packages.adoptium.net/artifactory/deb bookworm main" | sudo
-tee /etc/apt/sources.list.d/adoptium.list
+```bash
+serjaii@db:~$ echo "deb [signed-by=/usr/share/keyrings/adoptium.gpg] https://packages.adoptium.net/artifactory/deb bookworm main" | sudo tee /etc/apt/sources.list.d/adoptium.list
+```
 
 - Actualizar e instalar Java 11
 ```bash
@@ -2107,9 +1815,11 @@ serjaii@db:~$ sudo ss -tulpn | grep 9042 tcp LISTEN 0 127.0.0.1:9042 0.0.0.0:* u
 - Instalar drivers de Python
 - Instalar el driver de Cassandra desde código fuente
 
+```bash
 pip3 install --user --break-system-packages --no-cache-dir --nobinary :all: cassandra-driver
-- Instalar eventlet y futurist (necesarios para Python 3.13)
+# Instalar eventlet y futurist (necesarios para Python 3.13)
 pip3 install --user --break-system-packages eventlet futurist
+```
 - Python 3.13 eliminó el módulo asyncore, por lo que necesitamos usar eventlet
 como reactor de eventos alternativo.
 Configurar el driver para Python 3.13
@@ -2131,8 +1841,7 @@ from cassandra.io.eventletreactor import EventletConnection
 default_connection_class = EventletConnection
 conn_class = EventletConnection
 DefaultConnection = conn_class'''
-content_modified = re.sub(pattern, replacement, content,
-flags=re.DOTALL)
+content_modified = re.sub(pattern, replacement, content, flags=re.DOTALL)
 with open(cluster_file, 'w') as f:
 f.write(content_modified)
 print("✓ cluster.py modificado correctamente")
@@ -2535,10 +2244,7 @@ password: ' OR '1'='1
 Inyección de comentarios.
 Utiliza comentarios SQL para ignorar el resto de la consulta, y permitiendo de este
 modo el acceso. Para ello, necesitaremos un usuario existente solamente, ya que con
-los parámetros ‘ --, vamos a ignorar la comprobación de la contraseña en la consulta
-```bash
-SELECT de nuestro login.
-```
+los parámetros `--`, vamos a ignorar la comprobación de la contraseña en la consulta `SELECT` de nuestro login.
 Vamos a ponerlo en práctica. Para ello, en el formulario de inicio de sesión,
 ingresamos en usuario lo siguiente, y en el caso de la contraseña introducimos
 también lo siguiente.
@@ -2550,8 +2256,8 @@ ejemplo, todos los usuarios y contraseñas.
 Vamos a ponerlo en práctica. Para ello, en el formulario de inicio de sesión,
 ingresamos en usuario lo siguiente, y en el caso de la contraseña introducimos
 también lo siguiente.
-usuario: admin' UNION SELECT null, usuario,password,null
-FROM usuarios -password: [cualquiercontraseña]
+usuario: admin' UNION SELECT null, usuario,password,null FROM usuarios --
+password: [cualquiercontraseña]
 Antes de pasar con la ejecución de la inyección SQL, vamos a abrir la herramienta
 para desarrolladores, y en mi caso, voy a aplicar un punto de depuración antes de
 cambiar de página, para ver si en la respuesta del login, nos muestra todos los usuarios
@@ -2570,7 +2276,8 @@ Vamos a ponerlo en práctica. Para ello, en el formulario de inicio de sesión,
 ingresamos en usuario lo siguiente, y en el caso de la contraseña introducimos
 también lo siguiente.
 
-usuario: admin' || pg_sleep(5) -password: [cualquierContraseña]
+usuario: admin' || pg_sleep(5) --
+password: [cualquierContraseña]
 
 Para verificar que esto funciona correctamente, voy a facilitar capturas en la cuál se
 muestra un ejemplo en el que se intenta hacer un inicio de sesión con un usuario o
@@ -2584,7 +2291,8 @@ verdadera.
 Vamos a ponerlo en práctica. Para ello, en el formulario de inicio de sesión,
 ingresamos en usuario lo siguiente, y en el caso de la contraseña introducimos
 también lo siguiente.
-usuario: admin' OR 'a'='a' -contraseña: [cualquierContraseña]
+usuario: admin' OR 'a'='a' --
+contraseña: [cualquierContraseña]
 
 Inyección de Subconsultas.
 Usa subconsultas para obtener datos adicionales.
@@ -2594,12 +2302,14 @@ también lo siguiente. En este caso, en el caso de que cumpla con la subconsulta
 tablas, nos va a permitir loguearnos. Es decir, que en este ejemplo, en el caso de que la
 tabla no tenga algún dato nos va a permitir loguearnos. En el caso de que no lo
 tuviera, no nos va a permitir loguearnos.
-usuario: admin' OR (SELECT COUNT(*) FROM usuarios) > 0 -password: [cualquierContraseña]
+usuario: admin' OR (SELECT COUNT(*) FROM usuarios) > 0 --
+password: [cualquierContraseña]
 
 En el siguiente caso, no deberíamos de poder entrar, ya que la tabla Clientes tiene
 datos.
 
-usuario: admin' OR (SELECT COUNT(*) FROM usuarios) < 0 -password: [cualquierContraseña]
+usuario: admin' OR (SELECT COUNT(*) FROM usuarios) < 0 --
+password: [cualquierContraseña]
 
 Inyección de Errores.
 Provoca un error para obtener información sobre la base de datos. Si la aplicación es
@@ -2609,9 +2319,8 @@ datos.
 Vamos a ponerlo en práctica. Para ello, en el formulario de inicio de sesión,
 ingresamos en usuario lo siguiente, y en el caso de la contraseña introducimos
 también lo siguiente.
-usuario: admin' AND 1=(CAST((SELECT string_agg(nombre || ':'
-|| primerApellido || ':' || segundoApellido || ':' || telefono || ':' ||
-email, ', ') FROM clientes) AS INT)) -password: [cualquierContraseña]
+usuario: admin' AND 1=(CAST((SELECT string_agg(nombre || ':' || primerApellido || ':' || segundoApellido || ':' || telefono || ':' || email, ', ') FROM clientes) AS INT)) --
+password: [cualquierContraseña]
 
 En la herramienta de desarrollador del navegador web, nos vamos a la opción Red, y
 vemos como en la respuesta 500, que nos da el error “Error en la conexión a la base de
@@ -2623,8 +2332,8 @@ Vamos a ponerlo en práctica. Para ello, en el formulario de inicio de sesión,
 ingresamos en usuario lo siguiente, y en el caso de la contraseña introducimos
 también lo siguiente.
 
-usuario: admin' ; INSERT INTO usuarios (usuario, password)
-VALUES ('hacker', '123'); -password: [cualquierContraseña]
+usuario: admin' ; INSERT INTO usuarios (usuario, password) VALUES ('hacker', '123'); --
+password: [cualquierContraseña]
 
 Comprobamos que podemos acceder con el usuario y contraseña que hemos insertado.
 
@@ -2633,7 +2342,8 @@ Usa funciones de PostgreSQL para obtener información.
 Vamos a ponerlo en práctica. Para ello, en el formulario de inicio de sesión,
 ingresamos en usuario lo siguiente, y en el caso de la contraseña introducimos
 también lo siguiente.
-usuario: admin' AND 1=(SELECT CAST(version() AS INT)) -contraseña: [cualquierContraseña]
+usuario: admin' AND 1=(SELECT CAST(version() AS INT)) --
+contraseña: [cualquierContraseña]
 
 En la herramienta de desarrollador del navegador web, nos vamos a la opción Red, y
 vemos como en la respuesta 500, que nos da el error “Error en la conexión a la base de
@@ -2645,10 +2355,8 @@ Intenta extraer datos sensibles con UNION.
 Vamos a ponerlo en práctica. Para ello, en el formulario de inicio de sesión,
 ingresamos en usuario lo siguiente, y en el caso de la contraseña introducimos
 también lo siguiente.
-usuario: admin' UNION SELECT 1, json_build_object( 'id', id,
-'email', email, 'nombre_completo', nombre || ' ' || primerApellido ||
-' ' || COALESCE(segundoApellido, ''), 'telefono', telefono)::text,
-'CLIENTE', id FROM clientes -contraseña: [cualquierContraseña]
+usuario: admin' UNION SELECT 1, json_build_object( 'id', id, 'email', email, 'nombre_completo', nombre || ' ' || primerApellido || ' ' || COALESCE(segundoApellido, ''), 'telefono', telefono)::text, 'CLIENTE', id FROM clientes --
+contraseña: [cualquierContraseña]
 Antes de pasar con la ejecución de la inyección SQL, vamos a abrir la herramienta
 para desarrolladores, y en mi caso, voy a aplicar un punto de depuración antes de
 cambiar de página, para ver si en la respuesta del login, nos muestra todos los usuarios
@@ -2832,8 +2540,11 @@ serjaii@db:~$ sudo apt update && sudo apt upgrade -y
 - Instalamos las dependencias necesarias para la instalación de CouchDB, para
 poder añadir repositorios HTTPS y gestionar claves GPG.
 ```bash
-serjaii@db:~$ sudo apt install -y curl gnupg ca-certificates lsb-release apttransport-https - curl: para descargar la clave GPG. 
-- **gnupg**: para convertir la clave GPG a formato apt (dearmor). lsb-release: para obtener “VERSION_CODENAME”.
+serjaii@db:~$ sudo apt install -y curl gnupg ca-certificates lsb-release apt-transport-https 
+```
+- **curl**: para descargar la clave GPG. 
+- **gnupg**: para convertir la clave GPG a formato apt (dearmor). 
+- **lsb-release**: para obtener “VERSION_CODENAME”.
 ```
 - Añadimos el repositorio oficial de CouchDB, donde se encuentran los paquetes
 oficiales de CouchDB. Además, añadimos también su clave GPG para que apt
@@ -2844,7 +2555,7 @@ serjaii@db:~$ curl -fsSL https://couchdb.apache.org/repo/keys.asc | gpg --dearmo
 ```
 - Añadimos la entrada al sources list.
 ```bash
-serjaii@db:~$ echo "deb [signed-by=/usr/share/keyrings/couchdb-archivekeyring.gpg] https://apache.jfrog.io/artifactory/couchdb-deb/ bookworm main" | sudo tee /etc/apt/sources.list.d/couchdb.list
+serjaii@db:~$ echo "deb [signed-by=/usr/share/keyrings/couchdb-archive-keyring.gpg] https://apache.jfrog.io/artifactory/couchdb-deb/ bookworm main" | sudo tee /etc/apt/sources.list.d/couchdb.list
 ```
 - Actualizamos los índices APT, para que el sistema reconozca la clave GPG.
 ```bash
@@ -2861,9 +2572,9 @@ descargarnos e instalar las dependencias “libicu72” y “libmozjs-78-0”
 previamente, que son las dependencias que nos están fallando durante la
 instalación de CouchDB.
 ```bash
-serjaii@db:~$ wget http://ftp.debian.org/debian/pool/main/i/icu/libicu72_72.13+deb12u1_amd64.deb
-serjaii@db:~$ wget http://ftp.debian.org/debian/pool/main/m/mozjs78/libmozjs-7 8-0_78.15.0-7_amd64.deb
-serjaii@db:~$ sudo apt install ./libicu72_72.13+deb12u1_amd64.deb ./libmozjs-78-0_78.15.07_amd64.deb -
+serjaii@db:~$ wget http://ftp.debian.org/debian/pool/main/i/icu/libicu72_72.1-3+deb12u1_amd64.deb
+serjaii@db:~$ wget http://ftp.debian.org/debian/pool/main/m/mozjs78/libmozjs-78-0_78.15.0-7_amd64.deb
+serjaii@db:~$ sudo apt install ./libicu72_72.1-3+deb12u1_amd64.deb ./libmozjs-78-0_78.15.0-7_amd64.deb
 ```
 El ./ delante del nombre del archivo le dice a apt que instale desde un
 archivo local, no desde los repositorios.
@@ -3000,7 +2711,7 @@ serjaii@db:~$ curl -u admin:miContraseña "http://IP_DEL_SERVIDOR:5984/prueba1/_
 ```
 - Replicación local de la base de datos.
 ```bash
-serjaii@db:~$ curl -X POST -H "Content-Type: application/json" -d '{"source":"prueba1","target":"prueba1_backup","create_targ et":true}' -u admin:miContraseña http://IP_DEL_SERVIDOR:5984/_replicate
+serjaii@db:~$ curl -X POST -H "Content-Type: application/json" -d '{"source":"prueba1","target":"prueba1_backup","create_target":true}' -u admin:miContraseña http://IP_DEL_SERVIDOR:5984/_replicate
 ```
 - Creación de un usuario en CouchDB.
 ```bash
@@ -3059,13 +2770,10 @@ sudo apt install -y wget apt-transport-https gpg
 ```
 - Añadir la clave GPG del repositorio de Adoptium
 ```bash
-wget -qO - https://packages.adoptium.net/artifactory/api/gpg/key/public
-| sudo gpg --dearmor -o /usr/share/keyrings/adoptium.gpg
+serjaii@db:~$ wget -qO - https://packages.adoptium.net/artifactory/api/gpg/key/public | sudo gpg --dearmor -o /usr/share/keyrings/adoptium.gpg
 ```
 - Añadir el repositorio
-echo "deb [signed-by=/usr/share/keyrings/adoptium.gpg]
-https://packages.adoptium.net/artifactory/deb bookworm main" | sudo
-tee /etc/apt/sources.list.d/adoptium.list
+serjaii@db:~$ echo "deb [signed-by=/usr/share/keyrings/adoptium.gpg] https://packages.adoptium.net/artifactory/deb bookworm main" | sudo tee /etc/apt/sources.list.d/adoptium.list
 
 - Actualizar e instalar Java 17
 ```bash
@@ -3108,7 +2816,12 @@ ORCLCDB =
 - Tendremos que introducir algunas variables de entorno de oracle dentro
 de .bashrc
 ```bash
-serjaii@db:~$ nano ~/.bashrc export ORACLE_HOME=$HOME/oracle/instantclient_21_19 export TNS_ADMIN=$HOME/.oracle export PATH=$ORACLE_HOME:$PATH export LD_LIBRARY_PATH=$ORACLE_HOME:$LD_LIBRARY_PATH alias sqlplus='rlwrap sqlplus'
+serjaii@db:~$ nano ~/.bashrc 
+export ORACLE_HOME=$HOME/oracle/instantclient_21_19 
+export TNS_ADMIN=$HOME/.oracle 
+export PATH=$ORACLE_HOME:$PATH 
+export LD_LIBRARY_PATH=$ORACLE_HOME:$LD_LIBRARY_PATH 
+alias sqlplus='rlwrap sqlplus'
 ```
 - Algunas líneas ya las tenía yo en .bashrc por la conexión que hacemos de
 normal en oracle la línea importante es :
@@ -3125,7 +2838,15 @@ serjaii@db:~$ echo $TNS_ADMIN /home/oteo/SQL-Developer/.oracle
 ```
 - Comprobamos también que tnsnames.ora es accesible
 ```bash
-serjaii@db:~$ cat $TNS_ADMIN/tnsnames.ora ORCLCDB = (DESCRIPTION = (ADDRESS = (PROTOCOL = TCP)(HOST = 192.168.122.78)(PORT = 1521)) (CONNECT_DATA = (SERVER = DEDICATED) (SERVICE_NAME = ORCLCDB) ) )
+serjaii@db:~$ cat $TNS_ADMIN/tnsnames.ora 
+ORCLCDB = 
+(DESCRIPTION = 
+  (ADDRESS = (PROTOCOL = TCP)(HOST = 192.168.122.78)(PORT = 1521)) 
+  (CONNECT_DATA = 
+    (SERVER = DEDICATED) 
+    (SERVICE_NAME = ORCLCDB) 
+  ) 
+)
 ```
 
 ### 3.Conexión con SQL Developer
