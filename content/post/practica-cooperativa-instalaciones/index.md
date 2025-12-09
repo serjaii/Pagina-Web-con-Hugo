@@ -220,212 +220,88 @@ serjaii@db:~$ sqlplus hotel/hotel123@//192.168.122.79:1521/ORCLCDB
 ```
 - Creamos las tablas que van a componer la base de datos ‘hotel’, para permitir
 la gestión de un sistema de reservas de un hotel.
-SQL
-
->
-
+```sql
 CREATE TABLE clientes(
-id INT,
-nombre VARCHAR(15) NOT NULL,
-apellidos VARCHAR(30) NOT NULL,
-email VARCHAR(50),
-telefono NUMBER(9),
-CONSTRAINT pk_idCliente PRIMARY KEY (id),
-CONSTRAINT uq_email UNIQUE (email)
+    id INT,
+    nombre VARCHAR(15) NOT NULL,
+    apellidos VARCHAR(30) NOT NULL,
+    email VARCHAR(50),
+    telefono NUMBER(9),
+    CONSTRAINT pk_idCliente PRIMARY KEY (id),
+    CONSTRAINT uq_email UNIQUE (email)
 );
 
 CREATE TABLE habitaciones(
-id INT,
-numero INT NOT NULL,
-tipo VARCHAR(20) NOT NULL,
-precio DECIMAL(10,2) NOT NULL,
-CONSTRAINT pk_idHabitacion PRIMARY KEY (id),
-CONSTRAINT uq_numero UNIQUE (numero),
-CONSTRAINT ck_tipoHabitacion CHECK (tipo IN ('Individual', 'Doble', 'Suite', 'Familiar'))
+    id INT,
+    numero INT NOT NULL,
+    tipo VARCHAR(20) NOT NULL,
+    precio DECIMAL(10,2) NOT NULL,
+    CONSTRAINT pk_idHabitacion PRIMARY KEY (id),
+    CONSTRAINT uq_numero UNIQUE (numero),
+    CONSTRAINT ck_tipoHabitacion CHECK (tipo IN ('Individual', 'Doble', 'Suite', 'Familiar'))
 );
 
 CREATE TABLE reservas(
-id INT,
-idCliente INT NOT NULL,
-idHabitacion INT NOT NULL,
-fecha_entrada DATE NOT NULL,
-fecha_salida DATE NOT NULL,
-CONSTRAINT pk_idReservas PRIMARY KEY (id),
-CONSTRAINT fk_idCliente FOREIGN KEY (idCliente) REFERENCES clientes(id),
-CONSTRAINT fk_idHabitacion FOREIGN KEY (idHabitacion) REFERENCES habitaciones(id)
+    id INT,
+    idCliente INT NOT NULL,
+    idHabitacion INT NOT NULL,
+    fecha_entrada DATE NOT NULL,
+    fecha_salida DATE NOT NULL,
+    CONSTRAINT pk_idReservas PRIMARY KEY (id),
+    CONSTRAINT fk_idCliente FOREIGN KEY (idCliente) REFERENCES clientes(id),
+    CONSTRAINT fk_idHabitacion FOREIGN KEY (idHabitacion) REFERENCES habitaciones(id)
 );
 
 CREATE TABLE pagos(
-id INT,
-idReserva INT NOT NULL,
-metodoPago VARCHAR(20) NOT NULL,
-precio DECIMAL(10,2) NOT NULL,
-fechaPago DATE NOT NULL,
-CONSTRAINT pk_idPagos PRIMARY KEY (id),
-CONSTRAINT fk_idReserva FOREIGN KEY (idReserva) REFERENCES reservas(id),
-CONSTRAINT ck_metodoPago CHECK (metodoPago IN ('Tarjeta','Efectivo','PayPal'))
+    id INT,
+    idReserva INT NOT NULL,
+    metodoPago VARCHAR(20) NOT NULL,
+    precio DECIMAL(10,2) NOT NULL,
+    fechaPago DATE NOT NULL,
+    CONSTRAINT pk_idPagos PRIMARY KEY (id),
+    CONSTRAINT fk_idReserva FOREIGN KEY (idReserva) REFERENCES reservas(id),
+    CONSTRAINT ck_metodoPago CHECK (metodoPago IN ('Tarjeta','Efectivo','PayPal'))
 );
+```
 
 - Introducimos datos a la base de datos que acabamos de crear.
 Datos Tabla clientes:
-```bash
-INSERT INTO clientes (id, nombre, apellidos, email,
-telefono)
-VALUES
-(1, 'David', 'Dorado López', 'davidd@gmail.com',
-600111222);
-INSERT INTO clientes (id, nombre, apellidos, email,
-telefono)
-VALUES
-(2, 'María', 'Gómez Pérez', 'mariagom@gmail.com',
-600333444);
-INSERT INTO clientes (id, nombre, apellidos, email,
-telefono)
-VALUES
-(3, 'Jorge', 'Santos Díaz', 'jogesantos@gmail.com',
-600555666);
-INSERT INTO clientes (id, nombre, apellidos, email,
-telefono)
-VALUES
-(4, 'Lucía', 'Romero García', 'luciarom@yahoot.es',
-600777888);
-INSERT INTO clientes (id, nombre, apellidos, email,
-telefono)
-VALUES
-(5,
-'Pablo',
-'Ruiz
-Torres',
-'pablo@gmail.com',
-600999000);
-INSERT INTO clientes (id, nombre, apellidos, email,
-telefono)
-VALUES
-(6, 'Sofía', 'Martínez León', 'sofleon@yahoot.es',
-601111222);
-INSERT INTO clientes (id, nombre, apellidos, email,
-telefono)
-VALUES
-(7, 'Alberto', 'Navas Cruz', 'albertonavas@yahoot.es',
-601333444);
-INSERT INTO clientes (id, nombre, apellidos, email,
-telefono)
-VALUES
-(8,
-'Marta',
-'López
-Gil',
-'marta@gmail.com',
-601555666);
-INSERT INTO clientes (id, nombre, apellidos, email,
-telefono)
-VALUES
-(9, 'Raúl', 'Castro Vega', 'raulcastro@gmail.com',
-601777888);
-INSERT INTO clientes (id, nombre, apellidos, email,
-telefono)
-VALUES
-(10, 'Laura', 'Morales Cano', 'laura@gmail.com',
-601999000);
-Datos tabla habitaciones:
-INSERT INTO habitaciones (id, numero, tipo, precio)
-VALUES
-(1,
-101,
-'Individual',
-50);
-INSERT INTO habitaciones (id, numero, tipo, precio)
-VALUES
-(2,
-102,
-'Doble',
-80);
-INSERT INTO habitaciones (id, numero, tipo, precio)
-VALUES
-(3,
-103,
-'Suite',
-150);
-INSERT INTO habitaciones (id, numero, tipo, precio)
-VALUES
-(4,
-104,
-'Individual',
-50);
-INSERT INTO habitaciones (id, numero, tipo, precio)
-VALUES
-(5,
-105,
-'Doble',
-80);
-INSERT INTO habitaciones (id, numero, tipo, precio)
-VALUES
-(6, 106, 'Suite', 150);
-Datos tabla reservas:
-INSERT INTO reservas (id, idCliente, idHabitacion,
-fecha_entrada, fecha_salida) VALUES (1, 1, 1,
-TO_DATE('2025-10-01',
-'YYYY-MM-DD'),
-TO_DATE('2025-10-05',
-'YYYY-MM-DD'));
-INSERT INTO reservas (id, idCliente, idHabitacion,
-fecha_entrada, fecha_salida) VALUES (2, 2, 2,
-TO_DATE('2025-10-03',
-'YYYY-MM-DD'),
-TO_DATE('2025-10-06',
-'YYYY-MM-DD'));
-INSERT INTO reservas (id, idCliente, idHabitacion,
-fecha_entrada, fecha_salida) VALUES (3, 3, 3,
-TO_DATE('2025-10-02',
-TO_DATE('2025-10-04',
-'YYYY-MM-DD'),
-'YYYY-MM-DD'));
-INSERT INTO reservas (id, idCliente, idHabitacion,
-fecha_entrada, fecha_salida) VALUES (4, 4, 4,
-TO_DATE('2025-10-05',
-'YYYY-MM-DD'),
-TO_DATE('2025-10-10',
-'YYYY-MM-DD'));
-INSERT INTO reservas (id, idCliente, idHabitacion,
-fecha_entrada, fecha_salida) VALUES (5, 5, 5,
-TO_DATE('2025-10-07',
-'YYYY-MM-DD'),
-TO_DATE('2025-10-12',
-'YYYY-MM-DD'));
-INSERT INTO reservas (id, idCliente, idHabitacion,
-fecha_entrada, fecha_salida) VALUES (6, 6, 6,
-TO_DATE('2025-10-01',
-'YYYY-MM-DD'),
-TO_DATE('2025-10-03', 'YYYY-MM-DD'));
-Datos tabla pagos:
-INSERT INTO pagos (id, idReserva, metodoPago, precio,
-fechaPago)
-VALUES
-(1,
-1,
-'Tarjeta',
-200,
-TO_DATE('2025-10-01',
-'YYYY-MM-DD'));
-INSERT INTO pagos (id, idReserva, metodoPago,
-precio, fechaPago) VALUES (2, 2, 'Efectivo', 240,
-TO_DATE('2025-10-03',
-'YYYY-MM-DD'));
-INSERT INTO pagos (id, idReserva, metodoPago,
-precio, fechaPago) VALUES (3, 3, 'PayPal', 300,
-TO_DATE('2025-10-02',
-'YYYY-MM-DD'));
-INSERT INTO pagos (id, idReserva, metodoPago,
-precio, fechaPago) VALUES (4, 4, 'Tarjeta', 400,
-TO_DATE('2025-10-05',
-'YYYY-MM-DD'));
-INSERT INTO pagos (id, idReserva, metodoPago,
-precio, fechaPago) VALUES (5, 5, 'Efectivo', 320,
-TO_DATE('2025-10-07',
-'YYYY-MM-DD'));
-INSERT INTO pagos (id, idReserva, metodoPago,
-precio, fechaPago) VALUES (6, 6, 'PayPal', 150,
-TO_DATE('2025-10-01', 'YYYY-MM-DD'));
+```sql
+-- Datos Tabla clientes:
+INSERT INTO clientes (id, nombre, apellidos, email, telefono) VALUES (1, 'David', 'Dorado López', 'davidd@gmail.com', 600111222);
+INSERT INTO clientes (id, nombre, apellidos, email, telefono) VALUES (2, 'María', 'Gómez Pérez', 'mariagom@gmail.com', 600333444);
+INSERT INTO clientes (id, nombre, apellidos, email, telefono) VALUES (3, 'Jorge', 'Santos Díaz', 'jogesantos@gmail.com', 600555666);
+INSERT INTO clientes (id, nombre, apellidos, email, telefono) VALUES (4, 'Lucía', 'Romero García', 'luciarom@yahoot.es', 600777888);
+INSERT INTO clientes (id, nombre, apellidos, email, telefono) VALUES (5, 'Pablo', 'Ruiz Torres', 'pablo@gmail.com', 600999000);
+INSERT INTO clientes (id, nombre, apellidos, email, telefono) VALUES (6, 'Sofía', 'Martínez León', 'sofleon@yahoot.es', 601111222);
+INSERT INTO clientes (id, nombre, apellidos, email, telefono) VALUES (7, 'Alberto', 'Navas Cruz', 'albertonavas@yahoot.es', 601333444);
+INSERT INTO clientes (id, nombre, apellidos, email, telefono) VALUES (8, 'Marta', 'López Gil', 'marta@gmail.com', 601555666);
+INSERT INTO clientes (id, nombre, apellidos, email, telefono) VALUES (9, 'Raúl', 'Castro Vega', 'raulcastro@gmail.com', 601777888);
+INSERT INTO clientes (id, nombre, apellidos, email, telefono) VALUES (10, 'Laura', 'Morales Cano', 'laura@gmail.com', 601999000);
+
+-- Datos tabla habitaciones:
+INSERT INTO habitaciones (id, numero, tipo, precio) VALUES (1, 101, 'Individual', 50);
+INSERT INTO habitaciones (id, numero, tipo, precio) VALUES (2, 102, 'Doble', 80);
+INSERT INTO habitaciones (id, numero, tipo, precio) VALUES (3, 103, 'Suite', 150);
+INSERT INTO habitaciones (id, numero, tipo, precio) VALUES (4, 104, 'Individual', 50);
+INSERT INTO habitaciones (id, numero, tipo, precio) VALUES (5, 105, 'Doble', 80);
+INSERT INTO habitaciones (id, numero, tipo, precio) VALUES (6, 106, 'Suite', 150);
+
+-- Datos tabla reservas:
+INSERT INTO reservas (id, idCliente, idHabitacion, fecha_entrada, fecha_salida) VALUES (1, 1, 1, TO_DATE('2025-10-01', 'YYYY-MM-DD'), TO_DATE('2025-10-05', 'YYYY-MM-DD'));
+INSERT INTO reservas (id, idCliente, idHabitacion, fecha_entrada, fecha_salida) VALUES (2, 2, 2, TO_DATE('2025-10-03', 'YYYY-MM-DD'), TO_DATE('2025-10-06', 'YYYY-MM-DD'));
+INSERT INTO reservas (id, idCliente, idHabitacion, fecha_entrada, fecha_salida) VALUES (3, 3, 3, TO_DATE('2025-10-02', 'YYYY-MM-DD'), TO_DATE('2025-10-04', 'YYYY-MM-DD'));
+INSERT INTO reservas (id, idCliente, idHabitacion, fecha_entrada, fecha_salida) VALUES (4, 4, 4, TO_DATE('2025-10-05', 'YYYY-MM-DD'), TO_DATE('2025-10-10', 'YYYY-MM-DD'));
+INSERT INTO reservas (id, idCliente, idHabitacion, fecha_entrada, fecha_salida) VALUES (5, 5, 5, TO_DATE('2025-10-07', 'YYYY-MM-DD'), TO_DATE('2025-10-12', 'YYYY-MM-DD'));
+INSERT INTO reservas (id, idCliente, idHabitacion, fecha_entrada, fecha_salida) VALUES (6, 6, 6, TO_DATE('2025-10-01', 'YYYY-MM-DD'), TO_DATE('2025-10-03', 'YYYY-MM-DD'));
+
+-- Datos tabla pagos:
+INSERT INTO pagos (id, idReserva, metodoPago, precio, fechaPago) VALUES (1, 1, 'Tarjeta', 200, TO_DATE('2025-10-01', 'YYYY-MM-DD'));
+INSERT INTO pagos (id, idReserva, metodoPago, precio, fechaPago) VALUES (2, 2, 'Efectivo', 240, TO_DATE('2025-10-03', 'YYYY-MM-DD'));
+INSERT INTO pagos (id, idReserva, metodoPago, precio, fechaPago) VALUES (3, 3, 'PayPal', 300, TO_DATE('2025-10-02', 'YYYY-MM-DD'));
+INSERT INTO pagos (id, idReserva, metodoPago, precio, fechaPago) VALUES (4, 4, 'Tarjeta', 400, TO_DATE('2025-10-05', 'YYYY-MM-DD'));
+INSERT INTO pagos (id, idReserva, metodoPago, precio, fechaPago) VALUES (5, 5, 'Efectivo', 320, TO_DATE('2025-10-07', 'YYYY-MM-DD'));
+INSERT INTO pagos (id, idReserva, metodoPago, precio, fechaPago) VALUES (6, 6, 'PayPal', 150, TO_DATE('2025-10-01', 'YYYY-MM-DD'));
 ```
 - Comprobamos que todo se ha creado correctamente.
 ```bash
@@ -506,22 +382,22 @@ postgres=# CREATE DATABASE prueba_db;
 ```
 - Creamos un usuario con contraseña.
 ```bash
-postgres=# CREATE ROLE dorante WITH LOGIN PASSWORD 'dorante';
+postgres=# CREATE ROLE sergio WITH LOGIN PASSWORD 'sergio';
 ```
 - Le damos los privilegios que consideremos necesarios. En mi caso le voy a dar
 todos los privilegios.
 ```bash
 postgres=# GRANT ALL PRIVILEGES ON DATABASE
-prueba_db TO dorante;
+prueba_db TO sergio;
 postgres=# GRANT ALL PRIVILEGES ON ALL TABLES IN
-SCHEMA public TO david;
+SCHEMA public TO sergio;
 postgres=# GRANT ALL PRIVILEGES ON ALL
-SEQUENCES IN SCHEMA public TO david;
+SEQUENCES IN SCHEMA public TO sergio;
 ```
 - Intentamos conectarnos a la base de datos que acabamos de crear desde nuestra
 máquina local.
 ```bash
-serjaii@db:~$ psql -h localhost -p 5432 -U dorante -d prueba_db
+serjaii@db:~$ psql -h localhost -p 5432 -U sergio -d prueba_db
 ```
 
 ### 5.Instalación y configuración del cliente de PostgreSQL.
@@ -538,7 +414,7 @@ serjaii@db:~$ sudo apt install postgresql-client -y
 ```
 - Comprobamos que podemos acceder al servidor de PostgreSQL remotamente.
 ```bash
-serjaii@db:~$ psql -h 192.168.122.79 -p 5432 -U dorante -d prueba_db
+serjaii@db:~$ psql -h 192.168.122.79 -p 5432 -U sergio -d prueba_db
 ```
 
 ### 6.Creación de base de datos con tablas y datos en PostgreSQL.
@@ -553,18 +429,18 @@ y dotamos de los privilegios necesarios para que ese usuario pueda acceder a
 los datos de la base de datos.
 ```bash
 postgres=# CREATE DATABASE hotel;
-postgres=# CREATE USER david WITH PASSWORD
-'david';
+postgres=# CREATE USER sergio WITH PASSWORD
+'sergio';
 postgres=# GRANT ALL PRIVILEGES ON DATABASE
-hotel TO david;
+hotel TO sergio;
 hotel=# GRANT ALL PRIVILEGES ON ALL TABLES IN
-SCHEMA public TO david;
+SCHEMA public TO sergio;
 hotel=# GRANT ALL PRIVILEGES ON ALL SEQUENCES IN
-SCHEMA public TO david;
+SCHEMA public TO sergio;
 hotel=# ALTER DEFAULT PRIVILEGES IN SCHEMA public
-GRANT ALL PRIVILEGES ON TABLES TO david;
+GRANT ALL PRIVILEGES ON TABLES TO sergio;
 hotel=# ALTER DEFAULT PRIVILEGES IN SCHEMA public
-GRANT ALL PRIVILEGES ON SEQUENCES TO david;
+GRANT ALL PRIVILEGES ON SEQUENCES TO sergio;
 ```
 - Desde el cliente remoto accedemos a la base de datos que acabamos de crear
 con el usuario que hemos creado también ahora, y comenzamos con la creación
@@ -572,9 +448,16 @@ de tablas e inserción de datos.
 ```bash
 serjaii@db:~$ psql -h IP_ServidorPostgreSQL -p 5432 -U nombreUsuarioPostgreSQL -d baseDatosPostgreSQL 
 -- Creación de la tabla clientes.
- CREATE nombre apellidos TABLE id VARCHAR(15) VARCHAR(30) clientes( NUMERIC, NOT NULL, NOT NULL, email VARCHAR(50), telefono NUMERIC(9), 
-  CONSTRAINT pk_idCliente PRIMARY KEY (id), 
-  CONSTRAINT uq_email UNIQUE (email) );
+-- Creación de la tabla clientes.
+CREATE TABLE clientes(
+    id NUMERIC,
+    nombre VARCHAR(15) NOT NULL,
+    apellidos VARCHAR(30) NOT NULL,
+    email VARCHAR(50),
+    telefono NUMERIC(9),
+    CONSTRAINT pk_idCliente PRIMARY KEY (id),
+    CONSTRAINT uq_email UNIQUE (email)
+);
  
 -- Creación de la tabla habitaciones.
  
@@ -713,23 +596,15 @@ en MySQL.
 serjaii@db:~$ sudo mysql -u root -p
 ```
 - Creamos un usuario con contraseña.
-MariaDB [(none)]>
-CREATE
-IDENTIFIED BY 'dorante';
-
-USER
-
-'dorante'@'%'
-
-- Damos los privilegios necesarios para poder conectarnos remotamente también
-con el usuario que acabamos de crear.
-MariaDB [(none)]> GRANT ALL PRIVILEGES ON *.* TO
-'dorante'@'%' WITH GRANT OPTION;
+```sql
+MariaDB [(none)]> CREATE USER 'sergio'@'%' IDENTIFIED BY 'sergio';
+MariaDB [(none)]> GRANT ALL PRIVILEGES ON *.* TO 'sergio'@'%' WITH GRANT OPTION;
+```
 
 - Probamos que podemos conectarnos con el usuario que acabamos de crear
 desde nuestra propia máquina local.
 ```bash
-serjaii@db:~$ sudo mysql -h localhost -P 3306 -u dorante -p
+serjaii@db:~$ sudo mysql -h localhost -P 3306 -u sergio -p
 ```
 
 ### 4.Instalación y configuración del cliente de MySQL.
@@ -744,7 +619,7 @@ serjaii@db:~$ sudo apt install mariadb-client -y
 ```
 - Probamos a conectarnos al servidor de MySQL, desde el cliente.
 ```bash
-serjaii@db:~$ mysql -h 192.168.122.79 -P 3306 -u dorante -p
+serjaii@db:~$ mysql -h 192.168.122.79 -P 3306 -u sergio -p
 ```
 
 ### 5.Creación de base de datos con tablas y datos en MySQL.
@@ -756,26 +631,11 @@ serjaii@db:~$ sudo mysql -u root -p
 - Creamos la base de datos, el usuario con el vamos a acceder a la base de datos
 y dotamos de los privilegios necesarios para que ese usuario pueda acceder a
 los datos de la base de datos.
+```sql
 MariaDB [(none)]> CREATE DATABASE hotel;
-
-MariaDB
-[(none)]>
-CREATE
-IDENTIFIED BY 'david';
-
-USER
-
-'david'@'%'
-
-MariaDB [(none)]> GRANT ALL PRIVILEGES ON hotel.*
-TO 'david'@'%';
-
+MariaDB [(none)]> CREATE USER 'sergio'@'%' IDENTIFIED BY 'sergio';
+MariaDB [(none)]> GRANT ALL PRIVILEGES ON hotel.* TO 'sergio'@'%';
 MariaDB [(none)]> FLUSH PRIVILEGES;
-
-- Desde el cliente remoto accedemos a la base de datos que acabamos de crear
-con el usuario que hemos creado también ahora, y comenzamos con la creación
-de tablas e inserción de datos.
-```bash
 serjaii@db:~$ mysql -h IP_SERVIDOR_MYSQL -P 3306 -u usuario -p 
 MariaDB [(none)]>  
 USE hotel;
@@ -819,8 +679,8 @@ INSERT INTO clientes (id, nombre, apellidos, email, telefono) VALUES (4, 'Lucia'
  
 INSERT INTO clientes (id, nombre, apellidos, email, telefono) VALUES (5, 'Pablo', 'Ruiz Torres', 'pablo@gmail.com', 600999000);
  
-INSERT INTO clientes (id, nombre, apellidos, email, telefono) (6, 'Sofia', 601111222);
- 'Martinez Leon', VALUES 'sofleon@yahoot.es', 
+INSERT INTO clientes (id, nombre, apellidos, email, telefono) VALUES (6, 'Sofia', 'Martinez Leon', 'sofleon@yahoot.es', 601111222);
+
 INSERT INTO clientes (id, nombre, apellidos, email, telefono) VALUES (7, 'Alberto', 'Navas Cruz', 'albertonavas@yahoot.es', 601333444);
  
 INSERT INTO clientes (id, nombre, apellidos, email, telefono) VALUES (8, 'Marta', 'Lopez Gil', 'marta@gmail.com', 601555666);
@@ -845,30 +705,20 @@ INSERT INTO habitaciones (id, numero, tipo, precio) VALUES (6, 106, 'Suite', 150
  
 -- Inserción de datos en la tabla reservas.
  
-INSERT INTO reservas (id, idCliente, idHabitacion, fecha_entrada, fecha_salida) VALUES (1, 1, 1, '2025-1063 01', '2025-10-05');
- 
-INSERT INTO reservas (id, idCliente, idHabitacion, fecha_entrada, fecha_salida) VALUES (2, 2, 2, '2025-1003', '2025-10-06');
- 
-INSERT INTO reservas (id, idCliente, idHabitacion, fecha_entrada, fecha_salida) VALUES (3, 3, 3, '2025-1002', '2025-10-04');
- 
-INSERT INTO reservas (id, idCliente, idHabitacion, fecha_entrada, fecha_salida) VALUES (4, 4, 4, '2025-1005', '2025-10-10');
- 
-INSERT INTO reservas (id, idCliente, idHabitacion, fecha_entrada, fecha_salida) VALUES (5, 5, 5, '2025-1007', '2025-10-12');
- 
-INSERT INTO reservas (id, idCliente, idHabitacion, fecha_entrada, fecha_salida) VALUES (6, 6, 6, '2025-1001', '2025-10-03');
- 
+INSERT INTO reservas (id, idCliente, idHabitacion, fecha_entrada, fecha_salida) VALUES (1, 1, 1, '2025-10-01', '2025-10-05');
+INSERT INTO reservas (id, idCliente, idHabitacion, fecha_entrada, fecha_salida) VALUES (2, 2, 2, '2025-10-03', '2025-10-06');
+INSERT INTO reservas (id, idCliente, idHabitacion, fecha_entrada, fecha_salida) VALUES (3, 3, 3, '2025-10-02', '2025-10-04');
+INSERT INTO reservas (id, idCliente, idHabitacion, fecha_entrada, fecha_salida) VALUES (4, 4, 4, '2025-10-05', '2025-10-10');
+INSERT INTO reservas (id, idCliente, idHabitacion, fecha_entrada, fecha_salida) VALUES (5, 5, 5, '2025-10-07', '2025-10-12');
+INSERT INTO reservas (id, idCliente, idHabitacion, fecha_entrada, fecha_salida) VALUES (6, 6, 6, '2025-10-01', '2025-10-03');
+
 -- Inserción de datos en la tabla pagos.
- 
+
 INSERT INTO pagos (id, idReserva, metodoPago, precio, fechaPago) VALUES (1, 1, 'Tarjeta', 200, '2025-10-01');
- 
-INSERT INTO pagos (id, idReserva, metodoPago, precio, fechaPago) VALUES (2, 2, 'Efectivo', 240, '2025-1064 03');
- 
+INSERT INTO pagos (id, idReserva, metodoPago, precio, fechaPago) VALUES (2, 2, 'Efectivo', 240, '2025-10-03');
 INSERT INTO pagos (id, idReserva, metodoPago, precio, fechaPago) VALUES (3, 3, 'PayPal', 300, '2025-10-02');
- 
 INSERT INTO pagos (id, idReserva, metodoPago, precio, fechaPago) VALUES (4, 4, 'Tarjeta', 400, '2025-10-05');
- 
-INSERT INTO pagos (id, idReserva, metodoPago, precio, fechaPago) VALUES (5, 5, 'Efectivo', 320, '2025-1007');
- 
+INSERT INTO pagos (id, idReserva, metodoPago, precio, fechaPago) VALUES (5, 5, 'Efectivo', 320, '2025-10-07');
 INSERT INTO pagos (id, idReserva, metodoPago, precio, fechaPago) VALUES (6, 6, 'PayPal', 150, '2025-10-01');
 
 ```
@@ -910,15 +760,7 @@ Está en https://repo.mongodb.org/apt/debian.
 Usa la versión bookworm, que es equivalente tanto para Debian 12
 como para Debian 13.
 La sección es main.
-Los
-paquetes
-deben
-estar
-firmados
-con
-la
-clave
-“/usr/share/keyrings/mongodb-server-8.0.gpg”.
+Los paquetes deben estar firmados con la clave “/usr/share/keyrings/mongodb-server-8.0.gpg”.
 
 ```bash
 serjaii@db:~$ sudo echo "deb [signed-by=/usr/share/keyrings/mongodbserver-8.0.gpg] https://repo.mongodb.org/apt/debian bookworm/mongodb-org/8.0 main" | sudo tee /etc/apt/sources.list.d/mongodb-org-8.0.list
@@ -974,8 +816,8 @@ test> use pruebadb
 operar sobre la base de datos que acabamos de crear. Pero para ello, tenemos
 que hacerlo usando la base de datos que acabamos de crear.
 pruebadb> db.createUser({
-... user: "dorante",
-... pwd: "dorante",
+... user: "sergio",
+... pwd: "sergio",
 ... roles: [
 ...
 { role: "readWrite", db: "pruebadb" }
@@ -995,7 +837,7 @@ serjaii@db:~$ sudo systemctl restart mongod
 - Comprobamos que podemos conectarnos al usuario que acabamos de crear y a
 la base de datos.
 ```bash
-serjaii@db:~$ mongosh -u dorante -p dorante -authenticationDatabase pruebadb
+serjaii@db:~$ mongosh -u sergio -p sergio -authenticationDatabase pruebadb
 ```
 
 ### 5.Instalación y configuración del cliente de MongoDB.
@@ -1012,19 +854,12 @@ serjaii@db:~$ sudo apt install curl gnupg -y
 de MongoDB, y con “gpg --dearmor” la convertimos en formato binario para
 que apt pueda usarla.
 ```bash
-serjaii@db:~$ sudo curl -fsSL https://pgp.mongodb.com/server-8.0.asc | sudo gpg -75 dearmor -o server-8.0.gpg /usr/share/keyrings/mongodb-
+serjaii@db:~$ sudo curl -fsSL https://pgp.mongodb.com/server-8.0.asc | sudo gpg --dearmor -o /usr/share/keyrings/mongodb-server-8.0.gpg
 ```
 - A continuación, vamos a añadir el repositorio de MongoDB con el siguiente
 comando.
 ```bash
-sudo echo "deb [signed-by=/usr/share/keyrings/mongodbserver-8.0.gpg]
-https://repo.mongodb.org/apt/debian
-bookworm/mongodb-org/8.0
-main"
-|
-sudo
-tee
-/etc/apt/sources.list.d/mongodb-org-8.0.list
+serjaii@db:~$ echo "deb [signed-by=/usr/share/keyrings/mongodb-server-8.0.gpg] https://repo.mongodb.org/apt/debian bookworm/mongodb-org/8.0 main" | sudo tee /etc/apt/sources.list.d/mongodb-org-8.0.list
 ```
 - Volvemos a actualizar los paquetes.
 ```bash
@@ -1049,7 +884,7 @@ datos y el usuario con el que vamos a acceder a la base de datos remotamente.
 ```bash
 serjaii@db:~$ mongosh 
 test> use hotel 
-hotel> db.createUser({ user: "david", pwd: "david", roles: [{ role: "readWrite", db: "hotel" }] }) 
+hotel> db.createUser({ user: "sergio", pwd: "sergio", roles: [{ role: "readWrite", db: "hotel" }] }) 
 { ok: 1 }
 ```
 - Volvemos a activar la autenticación en “/etc/mongod.conf”.
@@ -1132,7 +967,7 @@ serjaii@db:~$ sudo apt install -y wget curl gnupg lsb-release ca-certificates ap
 - Neo4j necesita java para funcionar. En mi caso, voy a instalar Temurin Java 21,
 usando una versión mantenida por Adoptium.
 ```bash
-serjaii@db:~$ wget -qO https://packages.adoptium.net/artifactory/api/gpg/key/p ublic | gpg --dearmor | sudo tee /etc/apt/trusted.gpg.d/adoptium.gpg > /dev/null
+serjaii@db:~$ wget -qO https://packages.adoptium.net/artifactory/api/gpg/key/public | gpg --dearmor | sudo tee /etc/apt/trusted.gpg.d/adoptium.gpg > /dev/null
 ```
 Con este comando, estamos descargando y guardando la clave GPG para poder
 confiar en los paquetes de Adoptium.
@@ -1201,8 +1036,9 @@ el fichero “/etc/neo4j/neo4j.conf”, las siguientes líneas para permitir la
 conexión remota.
 ```bash
 serjaii@db:~$ sudo nano /etc/neo4j/neo4j.conf
-serjaii@db:~$ grep -E 'server.default_listen_address| server.bolt.listen_address|server.http.listen_address' /etc/neo4j/neo4j.conf - 0.0.0.0: escuchar todas las interfaces de red.
+serjaii@db:~$ grep -E 'server.default_listen_address|server.bolt.listen_address|server.http.listen_address' /etc/neo4j/neo4j.conf
 ```
+- 0.0.0.0: escuchar todas las interfaces de red.
 Puerto 7687: activar protocolo Bolt en el puerto 7687, usado por
 clientes como cypher-shell.
 Puerto 7474: interfaz web de Neo4j accesible desde el navegador.
@@ -1322,82 +1158,22 @@ CREATE (:Pagos {id: 10, monto: 75, metodo: "Efectivo"});
 ```
 - Creamos las relaciones entre los nodos que hemos creado antes.
 Cliente reserva Habitación.
-MATCH
-(c:Cliente
-CREATE
-MATCH (c:Cliente
-CREATE
-
-{id:1}),
-
-(h:Habitacion
-{id:1})
-(c)-[:Reserva]->(h);
-
-{id:2}),
-
-(h:Habitacion {id:3})
-(c)-[:Reserva]->(h);
-
-MATCH (c:Cliente
-CREATE
-
-{id:3}),
-
-(h:Habitacion {id:4})
-(c)-[:Reserva]->(h);
-
-MATCH (c:Cliente
-CREATE
-
-{id:4}),
-
-(h:Habitacion {id:2})
-(c)-[:Reserva]->(h);
-
-MATCH (c:Cliente
-CREATE
-
-{id:5}),
-
-(h:Habitacion {id:6})
-(c)-[:Reserva]->(h);
-
-MATCH (c:Cliente
-CREATE
-
-{id:6}),
-
-(h:Habitacion {id:8})
-(c)-[:Reserva]->(h);
-
-MATCH (c:Cliente
-CREATE
-
-{id:7}),
-
-(h:Habitacion {id:5})
-(c)-[:Reserva]->(h);
-
-MATCH (c:Cliente
-CREATE
-
-{id:8}),
-
-(h:Habitacion {id:7})
-(c)-[:Reserva]->(h);
-
-MATCH (c:Cliente
-CREATE
-
-{id:9}),
-
-(h:Habitacion {id:9})
-(c)-[:Reserva]->(h);
-
-MATCH (c:Cliente {id:10}), (h:Habitacion {id:10})
 ```bash
-CREATE (c)-[:Reserva]->(h);
+serjaii@db:~$ cypher-shell bolt://IP_SERVIDOR:7687 -u neo4j -p 'root1234'
+neo4j@neo4j> :use neo4j;
+
+// Cliente reserva Habitación.
+MATCH (c:Cliente {id:1}), (h:Habitacion {id:1}) CREATE (c)-[:Reserva]->(h);
+MATCH (c:Cliente {id:2}), (h:Habitacion {id:3}) CREATE (c)-[:Reserva]->(h);
+MATCH (c:Cliente {id:3}), (h:Habitacion {id:4}) CREATE (c)-[:Reserva]->(h);
+MATCH (c:Cliente {id:4}), (h:Habitacion {id:2}) CREATE (c)-[:Reserva]->(h);
+MATCH (c:Cliente {id:5}), (h:Habitacion {id:6}) CREATE (c)-[:Reserva]->(h);
+MATCH (c:Cliente {id:6}), (h:Habitacion {id:8}) CREATE (c)-[:Reserva]->(h);
+MATCH (c:Cliente {id:7}), (h:Habitacion {id:5}) CREATE (c)-[:Reserva]->(h);
+MATCH (c:Cliente {id:8}), (h:Habitacion {id:7}) CREATE (c)-[:Reserva]->(h);
+MATCH (c:Cliente {id:9}), (h:Habitacion {id:9}) CREATE (c)-[:Reserva]->(h);
+MATCH (c:Cliente {id:10}), (h:Habitacion {id:10}) CREATE (c)-[:Reserva]->(h);
+```
 // Cliente utiliza Servicio.
 MATCH (c:Cliente {id:1}),(s:Servicio{id:1}) CREATE (c)-[:USA]->(s);
 MATCH (c:Cliente {id:2}),(s:Servicio{id:4}) CREATE (c)-[:USA]->(s);
@@ -1426,128 +1202,112 @@ MATCH (c:Cliente {id:10}),(p:Pagos{id:10}) CREATE (c)-[:PAGA]->(p);
 ### 6.Pruebas del funcionamiento básico de Neo4j.
 - Obtener todos los nodos de un tipo. En mi caso, voy a obtener todos los nodos
 de Cliente y todos los nodos de Servicio.
-MATCH
-RETURN c;
-
-(c:Cliente)
-
-MATCH
-RETURN s;
-
-(s:Servicio)
+- Obtener todos los nodos de un tipo. En mi caso, voy a obtener todos los nodos
+de Cliente y todos los nodos de Servicio.
+```bash
+neo4j@neo4j> MATCH (c:Cliente) RETURN c;
+neo4j@neo4j> MATCH (s:Servicio) RETURN s;
+```
 
 - Obtener un nodo concreto. En mi caso voy a obtener el Cliente con id 1, y las
 habitaciones de tipo individual ordenados descendentemente por el número de
 habitación. Además, también voy a obtener los pagos de 90€ que se hayan
 realizado por transferencia.
-MATCH
-RETURN c;
+- Obtener un nodo concreto. En mi caso voy a obtener el Cliente con id 1, y las
+habitaciones de tipo individual ordenados descendentemente por el número de
+habitación. Además, también voy a obtener los pagos de 90€ que se hayan
+realizado por transferencia.
+```bash
+neo4j@neo4j> MATCH (c:Cliente {id:1}) RETURN c;
 
-(c:Cliente
+neo4j@neo4j> MATCH (h:Habitacion {tipo:'Individual'})
+RETURN h ORDER BY h.numero DESC;
 
-{id:1}
-
-MATCH
-(h:Habitacion
-RETURN h
-ORDER BY h.numero DESC;
-
-{tipo:'Individual'})
-
-MATCH (p:Pagos {monto: 90, metodo:'Transferencia'})
+neo4j@neo4j> MATCH (p:Pagos {monto: 90, metodo:'Transferencia'})
 RETURN p;
+```
 
 - Contar cuántos nodos Habitación hay que sean de tipo Suite.
-MATCH
-(h:Habitacion
-{tipo:'Suite'})
+- Contar cuántos nodos Habitación hay que sean de tipo Suite.
+```bash
+neo4j@neo4j> MATCH (h:Habitacion {tipo:'Suite'})
 RETURN COUNT(h) AS habitaciones_suite;
+```
 
 - Mostrar todas las relaciones de un nodo. En mi caso, voy a realizar la siguiente
 consulta de ejemplo: Mostrar las habitaciones que ha reservado el cliente cuyo
 nombre es Jorge y cuyo primer apellido es Santos.
-MATCH (c:Cliente {nombre:"Jorge", apellido1:"Santos"})[r]->(h:Habitacion)
+- Mostrar todas las relaciones de un nodo. En mi caso, voy a realizar la siguiente
+consulta de ejemplo: Mostrar las habitaciones que ha reservado el cliente cuyo
+nombre es Jorge y cuyo primer apellido es Santos.
+```bash
+neo4j@neo4j> MATCH (c:Cliente {nombre:"Jorge", apellido1:"Santos"})-[r]->(h:Habitacion)
 RETURN c.nombre, c.apellido1, r, h.numero, h.tipo;
+```
 
 - Obtener las habitaciones que ha reservado y los servicios que ha utilizado la
 clienta Marta Lopez Gil.
-MATCH (c:Cliente {nombre:"Marta", apellido1:"Lopez",
-apellido2:"Gil"})-[r]->(h:Habitacion),
+- Obtener las habitaciones que ha reservado y los servicios que ha utilizado la
+clienta Marta Lopez Gil.
+```bash
+neo4j@neo4j> MATCH (c:Cliente {nombre:"Marta", apellido1:"Lopez", apellido2:"Gil"})-[r]->(h:Habitacion),
 (c)-[u]->(s:Servicio)
-RETURN
-c.nombre,
-c.apellido1,
-c.apellido2,
-r,
-h.numero, h.tipo, u, s.nombre, s.precio;
+RETURN c.nombre, c.apellido1, c.apellido2, r, h.numero, h.tipo, u, s.nombre, s.precio;
+```
 
 - Obtener el número de servicios que ha utilizado cada cliente.
-MATCH
-(c:Cliente)-[u]->(s:Servicio)
-RETURN
-c.nombre,
-c.apellido1,
-c.apellido2,
-u,
-COUNT(s) AS Total_Servicios;
+- Obtener el número de servicios que ha utilizado cada cliente.
+```bash
+neo4j@neo4j> MATCH (c:Cliente)-[u]->(s:Servicio)
+RETURN c.nombre, c.apellido1, c.apellido2, u, COUNT(s) AS Total_Servicios;
+```
 
 - Obtener los clientes que realizaron pagos mayores a 100.
-MATCH
-(c:Cliente)-[:PAGA]->(p:Pagos)
-WHERE
-p.monto
->
+- Obtener los clientes que realizaron pagos mayores a 100.
+```bash
+neo4j@neo4j> MATCH (c:Cliente)-[:PAGA]->(p:Pagos)
+WHERE p.monto > 100
 RETURN c.nombre, c.apellido1, c.apellido2, p.monto;
+```
 
 - Modificar el precio del servicio Spa de 25€ a 20€.
-MATCH
-(s:Servicio
-{nombre:
-SET
-s.precio
-=
+- Modificar el precio del servicio Spa de 25€ a 20€.
+```bash
+neo4j@neo4j> MATCH (s:Servicio {nombre: "Spa"})
+SET s.precio = 20
 RETURN s.id, s.nombre, s.precio;
-
-"Spa"})
+```
 
 - Agregar una nueva relación entre Cliente y Habitación.
-MATCH
-(c:Cliente
-{id:2}),
-(h:Habitacion
-{id:2})
+- Agregar una nueva relación entre Cliente y Habitación.
+```bash
+neo4j@neo4j> MATCH (c:Cliente {id:2}), (h:Habitacion {id:2})
+CREATE (c)-[:Reserva {fecha_entrada: date("2025-10-10"), fecha_salida:date("2025-10-15")}]->(h);
+```
 ```bash
 CREATE (c)-[:Reserva {fecha_entrada: date("2025-1010"), fecha_salida:date("2025-10-15")}]->(h);
 ```
 - Borrar un nodo junto con sus relaciones.
-MATCH
+- Borrar un nodo junto con sus relaciones.
+```bash
+neo4j@neo4j> MATCH (p:Pagos {id:1})
 DETACH DELETE p;
-
-(p:Pagos
-
-{id:1})
+```
 
 - Listar los clientes ordenados por número de reservas.
-MATCH
-
-(c:Cliente)-[:Reserva]->(h:Habitacion)
-
-RETURN c.nombre, COUNT(h)
+- Listar los clientes ordenados por número de reservas.
+```bash
+neo4j@neo4j> MATCH (c:Cliente)-[:Reserva]->(h:Habitacion)
+RETURN c.nombre, COUNT(h) AS Total_Reservas
 ORDER BY Total_Reservas DESC;
-
-AS
-
-Total_Reservas
+```
 
 - Sumar todos los pagos de un cliente.
-MATCH
-(c:Cliente
-{id:3})-[:PAGA]->(p:Pagos)
-RETURN
-c.nombre,
-c.apellido1,
-c.apellido2,
-SUM(p.monto) AS total_pagado;
+- Sumar todos los pagos de un cliente.
+```bash
+neo4j@neo4j> MATCH (c:Cliente {id:3})-[:PAGA]->(p:Pagos)
+RETURN c.nombre, c.apellido1, c.apellido2, SUM(p.monto) AS total_pagado;
+```
 
 ## Instalación Servidor Redis en Debian 13
 
@@ -1596,32 +1356,37 @@ añadiremos una password para el acceso remoto
 
 ### 4.Configuración del cliente Redis-cli para acceso remoto
 - En primer lugar actualizamos los paquetes del sistema
-
+```bash
 serjaii@db:~$ sudo apt update
 serjaii@db:~$ sudo apt install redis-tools
-
+```
 - Comprobamos que podemos acceder remotamente
-
+```bash
 serjaii@db:~$ redis-cli -h bd -p 6379 -a clienteredis
+```
 
 ### 5.Creación de usuario,base de datos e inserción de datos
 - Ingresamos a la base de datos y creamos el usuario
+```bash
 serjaii@db:~$ redis-cli
 bd:6379> ACL SETUSER serjaii on >serjaii ~* +@all
 OK
-bd:6379>
-
+```
 - Accedemos con el nuevo usuario
+```bash
 serjaii@db:~$ redis-cli -h bd -p 6379 -a serjaii --user serjaii
 Warning: Using a password with '-a' or '-u' option on the
 command line interface may not be safe.
-bd:6379>
+```
 - Redis no trabaja con bases de datos ni tablas sino grafos y nodos,crearemos un
 grafo de ejemplo e insertaremos datos
+
 - Clientes:
+```bash
 HSET cliente:1 id 1 nombre "David" apellido1 "Dorado" apellido2 "Lopez" email "davidd@gmail.com" telefono "600111222"
 HSET cliente:2 id 2 nombre "Maria" apellido1 "Dorado" apellido2 "Lopez" email "maria@gmail.com" telefono "600333444"
 HSET cliente:3 id 3 nombre "Jorge" apellido1 "Santos" apellido2 "Diaz" email "jorgesantos@gmail.com" telefono "600555666"
+```
 HSET cliente:4 id 4 nombre "Lucia" apellido1 "Romero" apellido2 "Garcia" email "luciarom@yahoot.es" telefono "600777888"
 HSET cliente:5 id 5 nombre "Pablo" apellido1 "Ruiz" apellido2 "Torres" email "pablo@gmail.com" telefono "600999000"
 HSET cliente:6 id 6 nombre "Sofia" apellido1 "Martinez" apellido2 "Leon" email "sofleon@yahoot.es" telefono "601111222"
@@ -1763,22 +1528,24 @@ Configurar Cassandra como servicio systemd
 sudo nano /etc/systemd/system/cassandra.service
 ```
 - Tenemos que añadir lo siguiente
+```ini
 [Unit]
 Description=Apache Cassandra
 After=network.target
+
 [Service]
 Type=forking
 User=cassandra
 Group=cassandra
-ExecStart=/opt/cassandra/bin/cassandra -p
-/opt/cassandra/cassandra.pid
+ExecStart=/opt/cassandra/bin/cassandra -p /opt/cassandra/cassandra.pid
 ExecStop=/bin/kill -TERM $MAINPID
 Environment=JAVA_HOME=/usr/lib/jvm/temurin-11-jdk-amd64
-
 Restart=always
 LimitNOFILE=100000
+
 [Install]
 WantedBy=multi-user.target
+```
 
 - Explicación de las opciones:
 - Type=forking → Cassandra se ejecuta en segundo plano
@@ -1832,18 +1599,17 @@ import re
 site_packages = __import__('site').USER_SITE
 cluster_file = f"{site_packages}/cassandra/cluster.py"
 with open(cluster_file, 'r') as f:
-content = f.read()
+    content = f.read()
 # Buscar y reemplazar el bloque problemático
-pattern = r'if not conn_class:.*?raise DependencyException\([^)]+
-\)'
+pattern = r'if not conn_class:.*?raise DependencyException\([^)]+\)'
 replacement = '''if not conn_class:
-from cassandra.io.eventletreactor import EventletConnection
-default_connection_class = EventletConnection
-conn_class = EventletConnection
-DefaultConnection = conn_class'''
+    from cassandra.io.eventletreactor import EventletConnection
+    default_connection_class = EventletConnection
+    conn_class = EventletConnection
+    DefaultConnection = conn_class'''
 content_modified = re.sub(pattern, replacement, content, flags=re.DOTALL)
 with open(cluster_file, 'w') as f:
-f.write(content_modified)
+    f.write(content_modified)
 print("✓ cluster.py modificado correctamente")
 EOF
 ```
@@ -1883,11 +1649,11 @@ Crear wrapper para cqlsh
 sudo nano /usr/local/bin/cqlsh
 ```
 - tenemos que pegar el siguiente contenido
+```bash
 #!/bin/bash
-export
-PYTHONPATH=/usr/lib/python3/dist-packages:$HOME/.local/lib/python
-3.13/site-packages
+export PYTHONPATH=/usr/lib/python3/dist-packages:$HOME/.local/lib/python3.13/site-packages
 exec /opt/cassandra/bin/cqlsh "$@"
+```
 
 - Lo guardamos y lo hacemos ejecutable con lo siguiente
 ```bash
@@ -1953,26 +1719,26 @@ pip3 install --user --break-system-packages eventlet futurist
 - Configurar el driver en el cliente es igual que lo que hemos hecho en el
 servidor
 
+```python
 python3 << 'EOF'
 import re
 site_packages = __import__('site').USER_SITE
 cluster_file = f"{site_packages}/cassandra/cluster.py"
 with open(cluster_file, 'r') as f:
-content = f.read()
-pattern = r'if not conn_class:.*?raise DependencyException\([^)]+
-\)'
+    content = f.read()
+pattern = r'if not conn_class:.*?raise DependencyException\([^)]+\)'
 replacement = '''if not conn_class:
-from cassandra.io.eventletreactor import EventletConnection
-default_connection_class = EventletConnection
-conn_class = EventletConnection
-DefaultConnection = conn_class'''
+    from cassandra.io.eventletreactor import EventletConnection
+    default_connection_class = EventletConnection
+    conn_class = EventletConnection
+    DefaultConnection = conn_class'''
 
-content_modified = re.sub(pattern, replacement, content,
-flags=re.DOTALL)
+content_modified = re.sub(pattern, replacement, content, flags=re.DOTALL)
 with open(cluster_file, 'w') as f:
-f.write(content_modified)
+    f.write(content_modified)
 print("✓ cluster.py modificado correctamente")
 EOF
+```
 - Añadir cqlsh al PATH
 echo 'export PATH=$PATH:~/.local/bin' >> ~/.bashrc
 - Aplicamos los cambios
@@ -2238,8 +2004,10 @@ Vamos a ponerlo en práctica. Para ello, en el formulario de inicio de sesión,
 ingresamos en usuario lo siguiente, y en el caso de la contraseña introducimos
 también lo siguiente.
 
+```bash
 usuario: admin
 password: ' OR '1'='1
+```
 
 Inyección de comentarios.
 Utiliza comentarios SQL para ignorar el resto de la consulta, y permitiendo de este
@@ -2248,7 +2016,10 @@ los parámetros `--`, vamos a ignorar la comprobación de la contraseña en la c
 Vamos a ponerlo en práctica. Para ello, en el formulario de inicio de sesión,
 ingresamos en usuario lo siguiente, y en el caso de la contraseña introducimos
 también lo siguiente.
-usuario: usuarioVálido' -password: "cualquierContraseña"
+```bash
+usuario: usuarioVálido' --
+password: "cualquierContraseña"
+```
 
 Inyección de Unión (UNION Injection).
 Combina resultados de otra consulta para obtener datos adicionales, como por
@@ -2256,8 +2027,10 @@ ejemplo, todos los usuarios y contraseñas.
 Vamos a ponerlo en práctica. Para ello, en el formulario de inicio de sesión,
 ingresamos en usuario lo siguiente, y en el caso de la contraseña introducimos
 también lo siguiente.
+```bash
 usuario: admin' UNION SELECT null, usuario,password,null FROM usuarios --
 password: [cualquiercontraseña]
+```
 Antes de pasar con la ejecución de la inyección SQL, vamos a abrir la herramienta
 para desarrolladores, y en mi caso, voy a aplicar un punto de depuración antes de
 cambiar de página, para ver si en la respuesta del login, nos muestra todos los usuarios
@@ -2275,9 +2048,10 @@ en la respuesta. En este caso, la respuesta tardará 5 segundos en llegar.
 Vamos a ponerlo en práctica. Para ello, en el formulario de inicio de sesión,
 ingresamos en usuario lo siguiente, y en el caso de la contraseña introducimos
 también lo siguiente.
-
+```bash
 usuario: admin' || pg_sleep(5) --
 password: [cualquierContraseña]
+```
 
 Para verificar que esto funciona correctamente, voy a facilitar capturas en la cuál se
 muestra un ejemplo en el que se intenta hacer un inicio de sesión con un usuario o
@@ -2291,8 +2065,10 @@ verdadera.
 Vamos a ponerlo en práctica. Para ello, en el formulario de inicio de sesión,
 ingresamos en usuario lo siguiente, y en el caso de la contraseña introducimos
 también lo siguiente.
+```bash
 usuario: admin' OR 'a'='a' --
 contraseña: [cualquierContraseña]
+```
 
 Inyección de Subconsultas.
 Usa subconsultas para obtener datos adicionales.
@@ -2302,14 +2078,18 @@ también lo siguiente. En este caso, en el caso de que cumpla con la subconsulta
 tablas, nos va a permitir loguearnos. Es decir, que en este ejemplo, en el caso de que la
 tabla no tenga algún dato nos va a permitir loguearnos. En el caso de que no lo
 tuviera, no nos va a permitir loguearnos.
+```bash
 usuario: admin' OR (SELECT COUNT(*) FROM usuarios) > 0 --
 password: [cualquierContraseña]
+```
 
 En el siguiente caso, no deberíamos de poder entrar, ya que la tabla Clientes tiene
 datos.
 
+```bash
 usuario: admin' OR (SELECT COUNT(*) FROM usuarios) < 0 --
 password: [cualquierContraseña]
+```
 
 Inyección de Errores.
 Provoca un error para obtener información sobre la base de datos. Si la aplicación es
@@ -2319,8 +2099,10 @@ datos.
 Vamos a ponerlo en práctica. Para ello, en el formulario de inicio de sesión,
 ingresamos en usuario lo siguiente, y en el caso de la contraseña introducimos
 también lo siguiente.
+```bash
 usuario: admin' AND 1=(CAST((SELECT string_agg(nombre || ':' || primerApellido || ':' || segundoApellido || ':' || telefono || ':' || email, ', ') FROM clientes) AS INT)) --
 password: [cualquierContraseña]
+```
 
 En la herramienta de desarrollador del navegador web, nos vamos a la opción Red, y
 vemos como en la respuesta 500, que nos da el error “Error en la conexión a la base de
@@ -2332,8 +2114,10 @@ Vamos a ponerlo en práctica. Para ello, en el formulario de inicio de sesión,
 ingresamos en usuario lo siguiente, y en el caso de la contraseña introducimos
 también lo siguiente.
 
+```bash
 usuario: admin' ; INSERT INTO usuarios (usuario, password) VALUES ('hacker', '123'); --
 password: [cualquierContraseña]
+```
 
 Comprobamos que podemos acceder con el usuario y contraseña que hemos insertado.
 
@@ -2342,8 +2126,10 @@ Usa funciones de PostgreSQL para obtener información.
 Vamos a ponerlo en práctica. Para ello, en el formulario de inicio de sesión,
 ingresamos en usuario lo siguiente, y en el caso de la contraseña introducimos
 también lo siguiente.
+```bash
 usuario: admin' AND 1=(SELECT CAST(version() AS INT)) --
 contraseña: [cualquierContraseña]
+```
 
 En la herramienta de desarrollador del navegador web, nos vamos a la opción Red, y
 vemos como en la respuesta 500, que nos da el error “Error en la conexión a la base de
@@ -2355,8 +2141,10 @@ Intenta extraer datos sensibles con UNION.
 Vamos a ponerlo en práctica. Para ello, en el formulario de inicio de sesión,
 ingresamos en usuario lo siguiente, y en el caso de la contraseña introducimos
 también lo siguiente.
+```bash
 usuario: admin' UNION SELECT 1, json_build_object( 'id', id, 'email', email, 'nombre_completo', nombre || ' ' || primerApellido || ' ' || COALESCE(segundoApellido, ''), 'telefono', telefono)::text, 'CLIENTE', id FROM clientes --
 contraseña: [cualquierContraseña]
+```
 Antes de pasar con la ejecución de la inyección SQL, vamos a abrir la herramienta
 para desarrolladores, y en mi caso, voy a aplicar un punto de depuración antes de
 cambiar de página, para ver si en la respuesta del login, nos muestra todos los usuarios
@@ -2390,15 +2178,22 @@ Tras haber modificado las partes del código vulnerable de mi aplicación, para 
 página web no sea vulnerable, no nos deberá funcionar las siguientes inyecciones
 SQL.
 Inyección Básica.
+```bash
 usuario: admin
 password: ' OR '1'='1
+```
 
 Inyección de comentarios.
-usuario: usuarioVálido' -password: "cualquierContraseña"
+```bash
+usuario: usuarioVálido' --
+password: "cualquierContraseña"
+```
 
 Inyección de Unión (UNION Injection).
-usuario: admin' UNION SELECT null, usuario,password,null
-FROM usuarios -password: [cualquiercontraseña]
+```bash
+usuario: admin' UNION SELECT null, usuario,password,null FROM usuarios --
+password: [cualquiercontraseña]
+```
 
 Antes de pasar con la ejecución de la inyección SQL, vamos a abrir la herramienta
 para desarrolladores, y en mi caso, voy a aplicar un punto de depuración antes de
@@ -2412,43 +2207,59 @@ haber hecho esto, si todo se ha ejecutado correctamente, nos mostrará los datos
 hemos solicitado en el UNION.
 
 Inyección de Tiempo (Time-Based Blind SQL Injection).
-usuario: admin' || pg_sleep(5) -password: [cualquierContraseña]
+```bash
+usuario: admin' || pg_sleep(5) --
+password: [cualquierContraseña]
+```
 
 Como vemos en la siguiente captura, no se ha retardado la respuesta de nuestra página
 web.
 
 Inyección de Cadenas.
-usuario: admin' OR 'a'='a' -contraseña: [cualquierContraseña]
+```bash
+usuario: admin' OR 'a'='a' --
+contraseña: [cualquierContraseña]
+```
 
 Inyección de Subconsultas.
-usuario: admin' OR (SELECT COUNT(*) FROM usuarios) > 0 -password: [cualquierContraseña]
+```bash
+usuario: admin' OR (SELECT COUNT(*) FROM usuarios) > 0 --
+password: [cualquierContraseña]
+```
 
-usuario: admin' OR (SELECT COUNT(*) FROM usuarios) < 0 -password: [cualquierContraseña]
+```bash
+usuario: admin' OR (SELECT COUNT(*) FROM usuarios) < 0 --
+password: [cualquierContraseña]
+```
 
 Inyección de Errores.
-usuario: admin' AND 1=(CAST((SELECT string_agg(nombre || ':'
-|| primerApellido || ':' || segundoApellido || ':' || telefono || ':' ||
-email, ', ') FROM clientes) AS INT)) -password: [cualquierContraseña]
+```bash
+usuario: admin' AND 1=(CAST((SELECT string_agg(nombre || ':' || primerApellido || ':' || segundoApellido || ':' || telefono || ':' || email, ', ') FROM clientes) AS INT)) --
+password: [cualquierContraseña]
+```
 
 Inyección de Datos.
 
-usuario: admin' ; INSERT INTO usuarios (usuario, password)
-VALUES ('aaa', 'bbb'); -password: [cualquierContraseña]
+```bash
+usuario: admin' ; INSERT INTO usuarios (usuario, password) VALUES ('aaa', 'bbb'); --
+password: [cualquierContraseña]
+```
 
 Comprobamos que no se haya insertado el usuario, no pudiendo loguearnos con el
 usuario que hemos intentado insertar con la vulnerabilidad.
 
 Inyección de Funciones.
+```bash
 usuario: admin' AND 1=(SELECT CAST(version() AS INT)) --
-
 contraseña: [cualquierContraseña]
+```
 
 Inyección de Datos Sensibles
 
-usuario: admin' UNION SELECT 1, json_build_object( 'id', id,
-'email', email, 'nombre_completo', nombre || ' ' || primerApellido ||
-' ' || COALESCE(segundoApellido, ''), 'telefono', telefono)::text,
-'CLIENTE', id FROM clientes -contraseña: [cualquierContraseña]
+```bash
+usuario: admin' UNION SELECT 1, json_build_object( 'id', id, 'email', email, 'nombre_completo', nombre || ' ' || primerApellido || ' ' || COALESCE(segundoApellido, ''), 'telefono', telefono)::text, 'CLIENTE', id FROM clientes --
+contraseña: [cualquierContraseña]
+```
 Antes de pasar con la ejecución de la inyección SQL, vamos a abrir la herramienta
 para desarrolladores, y en mi caso, voy a aplicar un punto de depuración antes de
 cambiar de página, para ver si en la respuesta del login, nos muestra todos los usuarios
@@ -2497,12 +2308,13 @@ voy a implementarla en un Servidor Web que accede a una base de datos MySQL.
 una diferencia cuando la información llega desde memcached o desde el propio
 servidor de base de datos he añadido un aviso en el servidor web para poder
 reconocerlo.
+```html
 {% if cached %}
-<div
-style="background:#ffc107;color:#212529;padding:6px
-10px;border-radius:6px;font-weight:600;">Servido desde
-cache</div>
+<div style="background:#ffc107;color:#212529;padding:6px 10px;border-radius:6px;font-weight:600;">
+    Servido desde cache
+</div>
 {% endif %}
+```
 
 ### 3.Implementación en Flask
 Partiendo del siguiente proyecto repasaré los pasos que he seguido para
@@ -2644,8 +2456,9 @@ Insertar, actualizar y eliminar documentos.
 Gestionar usuarios y permisos.
 Consultar vistas y realizar replicaciones.
 Ejemplo de acceso a Fauxton desde otra máquina:
-
+```bash
 http://IP_DEL_SERVIDOR:5984/_utils/
+```
 
 - CouchDB se puede controlar completamente usando curl, una herramienta
 estándar para enviar peticiones HTTP.
@@ -2681,7 +2494,7 @@ serjaii@db:~$ curl -X PUT -H "Content-Type: application/json" -d '{"tipo":"perso
 ```bash
 serjaii@db:~$ curl -u admin:miContraseña http://IP_DEL_SERVIDOR:5984/prueba1/_all_docs
 serjaii@db:~$ curl -u admin:miContraseña http://IP_DEL_SERVIDOR:5984/prueba1/juan
-serjaii@db:~$ curl -u admin:miContraseña http://IP_DEL_SERVIDOR:5984/prueba1/4d8a13414adb24b 358662682d0000e13
+serjaii@db:~$ curl -u admin:miContraseña http://IP_DEL_SERVIDOR:5984/prueba1/4d8a13414adb24b358662682d0000e13
 ```
 - Borrado de un documento.
 ```bash
@@ -2773,7 +2586,9 @@ sudo apt install -y wget apt-transport-https gpg
 serjaii@db:~$ wget -qO - https://packages.adoptium.net/artifactory/api/gpg/key/public | sudo gpg --dearmor -o /usr/share/keyrings/adoptium.gpg
 ```
 - Añadir el repositorio
+```bash
 serjaii@db:~$ echo "deb [signed-by=/usr/share/keyrings/adoptium.gpg] https://packages.adoptium.net/artifactory/deb bookworm main" | sudo tee /etc/apt/sources.list.d/adoptium.list
+```
 
 - Actualizar e instalar Java 17
 ```bash
@@ -2781,7 +2596,9 @@ sudo apt update
 sudo apt install -y temurin-17-jdk
 ```
 - Verificar instalación
+```bash
 java -version
+```
 
 ### 2.Descarga SQL Developer desde Oracle
 - Lo hacemos a través del siguiente enlace SQL Developer
@@ -2804,14 +2621,16 @@ serjaii@db:~$ nano .oracle/tnsnames.ora
 - En mi caso con el siguiente contenido dentro dependiendo de el hostname de el
 servidor y la ip tendremos que hacer algún cambio
 
+```bash
 ORCLCDB =
-(DESCRIPTION =
-(ADDRESS = (PROTOCOL = TCP)(HOST = 192.168.122.78)(PORT = 1521))
-(CONNECT_DATA =
-(SERVER = DEDICATED)
-(SERVICE_NAME = ORCLCDB)
-)
-)
+  (DESCRIPTION =
+    (ADDRESS = (PROTOCOL = TCP)(HOST = 192.168.122.78)(PORT = 1521))
+    (CONNECT_DATA =
+      (SERVER = DEDICATED)
+      (SERVICE_NAME = ORCLCDB)
+    )
+  )
+```
 
 - Tendremos que introducir algunas variables de entorno de oracle dentro
 de .bashrc
@@ -2829,8 +2648,9 @@ export TNS_ADMIN=$HOME/.oracle
 
 - Aplicamos los cambios en bashrc y comprobamos que las variables se han
 establecido correctamente
+```bash
 echo $TNS_ADMIN
-
+```
 - Debe mostrar algo como lo siguiente
 
 ```bash
@@ -2856,7 +2676,7 @@ hacer la conexión TNS
 - Abrimos el tnsnames.ora que hemos creado antes
 
 - Ahora donde nos aparecía cargar archivo TNS nos aparecerá ORCLCDB
-clicamos hay y tendremos que poner el usuario y la contraseña de la base de
+clicamos ahí y tendremos que poner el usuario y la contraseña de la base de
 datos
 
 - Después de haber hecho esto ya tendremos cargado toda la base de datos de
