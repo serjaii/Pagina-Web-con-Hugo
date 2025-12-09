@@ -75,7 +75,7 @@ serjaii@db:~$ sudo dpkg -i oracle-database-ee-21c_1.02_amd64.deb
 serjaii@db:~$ sudo /etc/init.d/oracledb_ORCLCDB-21c configure
 ```
 - Para evitar que nos pida usuario y contraseña al entrar oracle, tendremos que
-añadir nuestro usuario, en mi caso, david, al grupo dba.
+añadir nuestro usuario, en mi caso, sergio, al grupo dba.
 ```bash
 serjaii@db:~$ sudo usermod -aG dba $USER
 ```
@@ -114,8 +114,8 @@ SQL> ALTER SESSION SET "_ORACLE_SCRIPT"=true;
 aplicamos los permisos que consideremos al mismo.
 
 ```bash
-SQL> CREATE USER dorante IDENTIFIED BY dorante;
-SQL> GRANT ALL PRIVILEGES TO dorante;
+SQL> CREATE USER sergio IDENTIFIED BY sergio;
+SQL> GRANT ALL PRIVILEGES TO sergio;
 ```
 - Para iniciar el servicio automáticamente al reiniciar vamos a modificar el
 crontab (programador de tareas de linux).
@@ -197,7 +197,7 @@ serjaii@db:~$ source ~/.bashrc
 ```
 - Nos conectamos desde el cliente al servidor Oracle.
 ```bash
-serjaii@db:~$ sqlplus dorante/dorante@//192.168.122.79:1521/ORCLCDB
+serjaii@db:~$ sqlplus sergio/sergio@//192.168.122.79:1521/ORCLCDB
 ```
 
 ### 6.Creación de base de datos con tablas y datos en Oracle.
@@ -2528,16 +2528,16 @@ serjaii@db:~$ curl -X POST -H "Content-Type: application/json" -d '{"source":"pr
 ```
 - Creación de un usuario en CouchDB.
 ```bash
-serjaii@db:~$ curl -X POST -H "Content-Type: application/json" -d '{"_id":"org.couchdb.user:david","name":"david","roles": ["admin"],"type":"user","password":"david"}' -u admin:admin http://192.168.122.79:5984/_users
+serjaii@db:~$ curl -X POST -H "Content-Type: application/json" -d '{"_id":"org.couchdb.user:sergio","name":"sergio","roles": ["admin"],"type":"user","password":"sergio"}' -u admin:admin http://192.168.122.79:5984/_users
 ```
 - Asignación de permisos al usuario sobre la base de datos.
 ```bash
-serjaii@db:~$ curl -X PUT -H "Content-Type: application/json" -d '{"admins":{"names": [],"roles": []},"members":{"names":["david"],"roles":["admin"]}}' -u admin:miContraseña http://IP_DEL_SERVIDOR:5984/prueba1/_security
+serjaii@db:~$ curl -X PUT -H "Content-Type: application/json" -d '{"admins":{"names": [],"roles": []},"members":{"names":["sergio"],"roles":["admin"]}}' -u admin:miContraseña http://IP_DEL_SERVIDOR:5984/prueba1/_security
 ```
 - Comprobación de que podemos acceder a la base de datos y ejecutar acciones
 sobre la base de datos de prueba con el nuevo usuario.
 ```bash
-serjaii@db:~$ curl -u david:david http://192.168.122.79:5984/prueba1/_all_docs
+serjaii@db:~$ curl -u sergio:sergio http://192.168.122.79:5984/prueba1/_all_docs
 ```
 
 ### 5. Funcionamiento interno de CouchDB.
@@ -2654,7 +2654,7 @@ echo $TNS_ADMIN
 - Debe mostrar algo como lo siguiente
 
 ```bash
-serjaii@db:~$ echo $TNS_ADMIN /home/oteo/SQL-Developer/.oracle
+serjaii@db:~$ echo $TNS_ADMIN /home/serjaii/SQL-Developer/.oracle
 ```
 - Comprobamos también que tnsnames.ora es accesible
 ```bash
@@ -2681,14 +2681,3 @@ datos
 
 - Después de haber hecho esto ya tendremos cargado toda la base de datos de
 oracle
-
-## Herramientas de Administración Web
-- Postgre
-
-- MySQL
-
-- MongoDB
-
-## Videocomparativa
-- Enlace a YouTube
-
