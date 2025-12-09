@@ -2668,16 +2668,3 @@ ORCLCDB =
   ) 
 )
 ```
-
-### 3.Conexión con SQL Developer
-- Ejecutamos el sqldeveloper.sh para abrirlo y seguimos los siguientes pasos para
-hacer la conexión TNS
-
-- Abrimos el tnsnames.ora que hemos creado antes
-
-- Ahora donde nos aparecía cargar archivo TNS nos aparecerá ORCLCDB
-clicamos ahí y tendremos que poner el usuario y la contraseña de la base de
-datos
-
-- Después de haber hecho esto ya tendremos cargado toda la base de datos de
-oracle
