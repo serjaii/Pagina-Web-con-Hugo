@@ -11,6 +11,8 @@ image: "cover.png"
 
 Este documento recoge el trabajo realizado para la puesta en marcha de diversos sistemas gestores de bases de datos en **Debian 13**. A continuación se detallan los pasos para cada uno de ellos.
 
+Esta práctica ha sido realizada por los alumnos Sergio Jiménez, José María Oteo y David Dorante.
+
 ## Instalación de Oracle 21c sobre Debian 13
 
 ### 1.Configuración previa y dependencias
