@@ -309,3 +309,135 @@ Si dispones de una imagen de instalación estándar de Debian (netinst) y quiere
 4.  Inicia el arranque. El instalador descargará el fichero de configuración y procederá con la instalación desatendida tal como se ha definido.
 
 Esto es especialmente útil para entornos de virtualización o instalaciones masivas donde no queremos mantener múltiples imágenes ISO modificadas.
+
+## Guía Manual de Instalación PXE + Preseed
+
+### 1. Prerrequisitos e Instalación de Paquetes
+
+Partimos de una máquina con Debian (server) que actuará como servidor de infraestructura. Necesitaremos instalar los servicios de DHCP, TFTP y Web.
+
+```bash
+sudo apt update
+sudo apt install isc-dhcp-server tftpd-hpa apache2 wget
+```
+
+### 2. Configuración del Servidor DHCP
+
+El servidor DHCP es el encargado de asignar IP a los clientes y decirles dónde encontrar el archivo de arranque.
+
+Editamos el archivo `/etc/dhcp/dhcpd.conf`:
+
+```bash
+option arch code 93 = unsigned integer 16;
+default-lease-time 600;
+max-lease-time 7200;
+authoritative;
+
+# Ajustar la subred según tu entorno de red actual
+subnet 192.168.122.0 netmask 255.255.255.0 {
+    range 192.168.122.100 192.168.122.200;
+    option routers 192.168.122.1;
+    option domain-name-servers 8.8.8.8;
+
+    class "pxeclients" {
+        match if substring (option vendor-class-identifier, 0, 9) = "PXEClient";
+        # IP de este mismo servidor (PXE)
+        next-server 192.168.122.18;
+
+        # Lógica para servir el fichero correcto según sea BIOS o UEFI
+        if option arch = 00:07 {
+            filename "debian-installer/amd64/bootnetx64.efi";
+        } else if option arch = 00:09 {
+            filename "debian-installer/amd64/bootnetx64.efi";
+        } else {
+            filename "pxelinux.0";
+        }
+    }
+}
+```
+
+Además, definimos la interfaz de escucha en `/etc/default/isc-dhcp-server`:
+
+```bash
+INTERFACESv4="ens3"
+```
+
+### 3. Configuración TFTP y Ficheros de Arranque (Netboot)
+
+El servicio TFTP servirá el kernel y el instalador inicial. Descargamos la imagen *netboot* diaria de Debian Trixie y la extraemos en el directorio raíz del TFTP (`/srv/tftp`).
+
+```bash
+# Limpiamos directorio anterior si existe
+sudo rm -rf /srv/tftp/*
+
+# Descargamos la imagen netboot
+wget https://d-i.debian.org/daily-images/amd64/daily/netboot/netboot.tar.gz
+
+# Extraemos en el directorio del servidor TFTP
+sudo tar -xzf netboot.tar.gz -C /srv/tftp/
+sudo chown -R tftp:tftp /srv/tftp
+```
+
+### 4. Automatización del Arranque (Boot Menus)
+
+Para evitar preguntas durante la carga inicial y forzar el uso de nuestro *preseed*, debemos editar los menús de arranque por defecto.
+
+#### Configuración para BIOS (Legacy)
+
+Editamos el archivo `/srv/tftp/pxelinux.cfg/default`. Creamos una entrada que pase los parámetros `auto=true`, `priority=critical` y la URL de nuestro preseed.
+
+```bash
+DEFAULT install
+LABEL install
+    KERNEL debian-installer/amd64/linux
+    APPEND vga=788 initrd=debian-installer/amd64/initrd.gz auto=true priority=critical url=http://192.168.122.18/preseed.cfg --- quiet
+```
+
+#### Configuración para UEFI (GRUB)
+
+Editamos el archivo `/srv/tftp/debian-installer/amd64/grub/grub.cfg`:
+
+```bash
+set default="0"
+set timeout=0
+
+menuentry "Install Debian 13 (Automated)" {
+    linux /debian-installer/amd64/linux auto=true priority=critical url=http://192.168.122.18/preseed.cfg --- quiet
+    initrd /debian-installer/amd64/initrd.gz
+}
+```
+
+### 5. Publicación del Fichero Preseed
+
+El instalador buscará el archivo de configuración en la URL que especificamos. Copiamos nuestro `preseed.cfg` al directorio raíz del servidor web Apache.
+
+```bash
+sudo cp preseed.cfg /var/www/html/
+sudo chmod 644 /var/www/html/preseed.cfg
+```
+
+### 6. Finalización
+
+Reiniciamos los servicios para aplicar cambios:
+
+```bash
+sudo systemctl restart isc-dhcp-server
+sudo systemctl restart tftpd-hpa
+sudo systemctl restart apache2
+```
+
+Ahora el servidor está listo para recibir peticiones de arranque por red.
+
+---
+
+### Automatización mediante Script
+
+Para simplificar y estandarizar este proceso, he desarrollado un script llamado `install_pxe.sh` que automatiza **todos los pasos descritos anteriormente**.
+
+Para usarlo, basta con ejecutar:
+
+```bash
+sudo ./install_pxe.sh
+```
+
+Descargar Script: [install_pxe.sh](/files/install_pxe.sh)
