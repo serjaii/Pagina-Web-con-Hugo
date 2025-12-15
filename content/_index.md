@@ -1,4 +1,4 @@
 ---
 title: SerjAii
-description: Administración de sistemas informáticos en red
+description: Sys and Network Admin
 ---
