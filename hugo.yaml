@@ -23,7 +23,7 @@ params:
     lastUpdated: "02 Jan 2006 15:04 MST"
 
   sidebar:
-    subtitle: "Administración de sistemas informáticos en red"
+    subtitle: "Sys and Network Admin"
     avatar:
       enabled: true
       local: true
