@@ -2,6 +2,68 @@ baseURL: "http://sergiojimenez.org/"
 languageCode: es-es
 theme: hugo-theme-stack
 title: SerjAii
+defaultContentLanguage: es
+languages:
+  es:
+    contentDir: content/es
+    languageName: Español
+    weight: 1
+    menu:
+      main:
+        - identifier: home
+          name: Inicio
+          url: /
+          weight: 1
+          params:
+            icon: home
+        - identifier: proyectos
+          name: Proyectos
+          url: /proyectos/
+          weight: 3
+          params:
+            icon: archives
+        - identifier: search
+          name: Buscar
+          url: /search/
+          weight: 4
+          params:
+            icon: search
+        - identifier: about
+          name: Sobre Mí
+          url: /about/
+          weight: 2
+          params:
+            icon: user
+  en:
+    contentDir: content/en
+    languageName: English
+    weight: 2
+    menu:
+      main:
+        - identifier: home
+          name: Home
+          url: /en/
+          weight: 1
+          params:
+            icon: home
+        - identifier: projects
+          name: Projects
+          url: /en/projects/
+          weight: 3
+          params:
+            icon: archives
+        - identifier: search
+          name: Search
+          url: /en/search/
+          weight: 4
+          params:
+            icon: search
+        - identifier: about
+          name: About Me
+          url: /en/about/
+          weight: 2
+          params:
+            icon: user
 
 outputs:
   home:
@@ -37,7 +99,6 @@ params:
   widgets:
     homepage:
       - type: search
-      - type: archives
       - type: categories
       - type: tag-cloud
     page:
@@ -48,26 +109,6 @@ params:
     default: auto
 
 menu:
-  main:
-    - identifier: home
-      name: Inicio
-      url: /
-      weight: 1
-      params:
-        icon: home
-    - identifier: proyectos
-      name: Proyectos
-      url: /proyectos/
-      weight: 3
-      params:
-        icon: archives
-    - identifier: search
-      name: Buscar
-      url: /search/
-      weight: 4
-      params:
-        icon: search
-
   social:
     - identifier: github
       name: GitHub

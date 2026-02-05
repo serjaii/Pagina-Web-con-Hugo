@@ -1,16 +1,11 @@
 ---
 title: Sobre Mi
 description: Un poco sobre quién soy y qué hago
-menu:
-    main:
-        weight: 2
-        params:
-            icon: user
 ---
 
 ¡Hola! Me llamo Sergio Jiménez, actualmente curso 2º de ASIR en IES Gonzalo Nazareno,soy un apasionado de las redes y los sistemas.
 
-Actualmente me encuentro en busqueda de empresas para realizar mis prácticas de Formacion Dual.
+
 
 ## Conocimientos Técnicos
 
