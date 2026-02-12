@@ -4,26 +4,37 @@ on:
   push:
     branches:
       - main
+
 jobs:
-  build-and-deploy:
+  build-deploy:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout código
+      - name: Checkout Fuente (Hugo)
         uses: actions/checkout@v4
         with:
           submodules: recursive
           fetch-depth: 0
 
-      - name: Configurar Hugo
+      - name: Setup Hugo
         uses: peaceiris/actions-hugo@v3
         with:
           hugo-version: 'latest'
           extended: true
 
-      - name: Build del sitio
+      - name: Build
         run: hugo --minify
 
-      - name: Desplegar al VPS vía rsync
+      # PASO 1: Actualizar el repositorio de HTML (serjaii/Serjaii)
+      - name: Deploy to GitHub Pages Repo
+        uses: peaceiris/actions-gh-pages@v4
+        with:
+          external_repository: serjaii/Serjaii
+          personal_token: ${{ secrets.GH_PAT }} # Necesitas un Token (PAT)
+          publish_dir: ./public
+          publish_branch: main
+
+      # PASO 2: Desplegar al VPS (lo que hacía tu deploy.sh)
+      - name: Deploy to VPS
         uses: Burnett01/rsync-deployments@5.2.1
         with:
           switches: -avzr --delete
@@ -32,7 +43,8 @@ jobs:
           remote_host: ${{ secrets.REMOTE_HOST }}
           remote_user: ${{ secrets.REMOTE_USER }}
           remote_key: ${{ secrets.SSH_PRIVATE_KEY }}
-      - name: Ajustar permisos en el servidor
+
+      - name: Ajustar permisos VPS
         uses: appleboy/ssh-action@v1.0.3
         with:
           host: ${{ secrets.REMOTE_HOST }}
@@ -41,4 +53,3 @@ jobs:
           script: |
             sudo chown -R www-data:www-data /var/www/serjaii
             sudo chmod -R 755 /var/www/serjaii
-            echo "✅ Permisos ajustados a www-data"
