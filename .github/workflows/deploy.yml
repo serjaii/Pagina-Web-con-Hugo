@@ -33,7 +33,18 @@ jobs:
           publish_dir: ./public
           publish_branch: main
 
-      # PASO 2: Desplegar al VPS (lo que hacía tu deploy.sh)
+      # PASO 2: Ajustar permisos VPS antes de rsync
+      - name: Ajustar permisos VPS
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.REMOTE_HOST }}
+          username: ${{ secrets.REMOTE_USER }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          script: |
+            sudo chown -R ${{ secrets.REMOTE_USER }}:www-data /var/www/serjaii
+            sudo chmod -R 755 /var/www/serjaii
+
+      # PASO 3: Desplegar al VPS (lo que hacía tu deploy.sh)
       - name: Deploy to VPS
         uses: Burnett01/rsync-deployments@5.2.1
         with:
@@ -43,13 +54,3 @@ jobs:
           remote_host: ${{ secrets.REMOTE_HOST }}
           remote_user: ${{ secrets.REMOTE_USER }}
           remote_key: ${{ secrets.SSH_PRIVATE_KEY }}
-
-      - name: Ajustar permisos VPS
-        uses: appleboy/ssh-action@v1.0.3
-        with:
-          host: ${{ secrets.REMOTE_HOST }}
-          username: ${{ secrets.REMOTE_USER }}
-          key: ${{ secrets.SSH_PRIVATE_KEY }}
-          script: |
-            sudo chown -R www-data:www-data /var/www/serjaii
-            sudo chmod -R 755 /var/www/serjaii
