@@ -55,3 +55,5 @@ description: Un poco sobre quién soy y qué hago
 - GitHub: [@serjaii](https://github.com/serjaii)
 - LinkedIn: [Sergio Jiménez](www.linkedin.com/in/serjaii)
 - Email: [sjnezsrez@gmail.com](mailto:sjnezsrez@gmail.com)
+
+<!-- Deployment Check: 2026-02-13T08:00:00 -->
